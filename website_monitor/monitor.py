@@ -1,4 +1,5 @@
 import asyncio
+from concurrent.futures import ThreadPoolExecutor
 import pandas as pd
 import aiohttp
 import smtplib
@@ -9,7 +10,7 @@ import socket
 import time
 from playwright.sync_api import sync_playwright
 from threading import Thread
-
+from rich.logging import RichHandler
 import requests
 
 # Constants
@@ -24,11 +25,12 @@ METADATA_FILE = "metadata.json"
 
 # Logging configuration
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+    handlers=[RichHandler()],
+    level=logging.INFO, 
+    format="%(asctime)s - %(levelname)s - %(message)s")
 
+# Global variables
 websites = {}
-
 
 def load_metadata():
     if os.path.exists(METADATA_FILE):
@@ -42,13 +44,16 @@ def save_metadata(metadata):
         json.dump(metadata, file, indent=4)
 
 
-def update_metadata(website, screenshot_path):
+def update_metadata(website, screenshot_name):
     metadata = load_metadata()
-    metadata[website] = {
-        "last_captured": time.time(),
-        "screenshot_path": screenshot_path,
-    }
-    save_metadata(metadata)
+    data = {
+            "last_captured": time.time(),
+            "screenshot_path": screenshot_name,}
+    if metadata:
+        metadata[website] = data
+        save_metadata(metadata)
+    else:
+        save_metadata({website: data})
 
 
 def get_website_ip(website_url):
@@ -58,86 +63,76 @@ def get_website_ip(website_url):
         return "IP Not Found"
 
 
-def capture_screenshot(website_url, output_folder="static/screenshots", delay=3):
+def get_website_screenshot(website_url, output_folder="static/screenshots"):
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
-
-    metadata = load_metadata()
-    options = {"headless": True, "args": ["--no-sandbox", "--disable-gpu"]}
 
     with sync_playwright() as p:
 
         try:
-            screenshot_filename = (
-                f"{website_url.replace('https://', '').replace('/', '_')}.png"
-            )
+            screenshot_filename = f"{website_url.replace('https://', '').replace('/', '_')}.png"
             screenshot_path = os.path.join(output_folder, screenshot_filename)
 
-            if not os.path.exists(screenshot_path):
-                browser = p.chromium.launch(**options)
-                page = browser.new_page()
-                page.goto(website_url)
-                page.screenshot(path=screenshot_path)
-                logging.info(f"Screenshot saved for {website_url}")
-                update_metadata(website_url, screenshot_path)
-                browser.close()
-            else:
-                logging.info(f"Screenshot already exists for {website_url}")
-        except Exception as e:
-            logging.error(f"Error capturing screenshot for {website_url}: {e}")
-        finally:            
+            options = {"headless": True, "args": ["--no-sandbox", "--disable-gpu"]}
+            browser = p.chromium.launch(**options)
+            page = browser.new_page()
+            page.goto(website_url, wait_until="networkidle")
+            page.screenshot(path=screenshot_path) 
+            browser.close()
+
+            update_metadata(website_url, screenshot_path)
             return screenshot_filename
 
+        except Exception as e:
+            logging.error(f"Error capturing screenshot for {website_url}: {e}")
 
 def add_screenshot_to_website(website):
     global websites
     try:
         last_captured = websites[website].get("last_captured")
         website_ip = websites[website].get("ip")
+        current_time = time.time()
+
         if website_ip == "IP Not Found":
             return
-        if (
-            last_captured is None or (time.time() - last_captured) > 3600
-        ):  # Check if more than an hour has passed
-            screenshot_path = capture_screenshot(website)
-            websites[website]["screenshot"] = screenshot_path
+    
+        if last_captured is None or last_captured + 3600 <= current_time:  # Check if more than an hour has passed
+            screenshot_filename = get_website_screenshot(website)
+            websites[website]["screenshot"] = screenshot_filename
+            websites[website]["last_captured"] = time.time()
+            logging.info(f"Screenshot added for {website}")
+        else:
+            logging.info(f"Screenshot already exists for {website}")
     except Exception as e:
         logging.error(f"Error adding screenshot for {website}: {e}")
 
 
-def load_websites_from_excel(file_path: str = "website_monitor\\domainler.xlsx"):
+async def load_websites_from_excel(file_path: str = "website_monitor\\domainler.xlsx"):
     global websites
     try:
-        df = pd.read_excel(file_path)
-        df["Domain"] = (
-            df["Domain"].str.strip().str.lower()
-        )  # Remove leading/trailing whitespace and convert to lowercase
+        df = pd.read_excel(file_path, engine="openpyxl")
+        df["Domain"] = df["Domain"].str.strip().str.lower()  # Remove leading/trailing whitespace and convert to lowercase
         metadata = load_metadata()
 
-        for url in df["Domain"].dropna():
-            website = f"https://www.{url}/"
-            ip_address = get_website_ip(url)
-            websites[website] = {
-                "ip": ip_address,
-                "status": "Unknown",
-                "error_count": 0,
-                "status_code": 0,
-                "last_captured": metadata.get(website, {}).get("last_captured"),
-            }
-            scr_thread = Thread(
-                target=add_screenshot_to_website, args=(website,))
-            scr_thread.start()
+        with ThreadPoolExecutor(max_workers=15) as executor:  # Limit to 5 concurrent threads
+            for url in df["Domain"].dropna():
+                website = f"https://www.{url}/"
+                ip_address = get_website_ip(url)
+                websites[website] = {
+                    "ip": ip_address,
+                    "status": "Unknown",
+                    "error_count": 0,
+                    "status_code": 0,
+                    "last_captured": metadata.get(website, {}).get("last_captured"),
+                    "screenshot": metadata.get(website, {}).get("screenshot_path"),
+                }
+                executor.submit(add_screenshot_to_website, website)
 
         logging.info("Websites loaded from Excel")
         return websites
     except Exception as e:
         logging.error(f"Error loading Excel file: {e}")
         return {}
-
-
-# Load websites from Excel
-load_websites_from_excel()
-
 
 def send_email_alert(website):
     try:
@@ -157,7 +152,9 @@ def check_website(url):
     global websites
     for _ in range(RETRY_COUNT + 1):
         try:
-            with requests.get(url, timeout=30) as response:
+            with requests.get(url, timeout=30, stream=True) as response:
+                logging.debug(response.raw._original_response._remote)
+                logging.info(response.json()['ip'])
                 websites[url]["status_code"] = response.status_code
                 if response.status_code == 200:
                     websites[url]["status"] = "Up"
@@ -186,15 +183,19 @@ def check_website(url):
     return False
 
 
-def check_websites():
-
+async def check_websites():
+    global websites
+    
+    # Load websites from Excel
+    await load_websites_from_excel()
     for website in websites:
 
         web_thread = Thread(target=check_website, args=(website,))
         web_thread.start()
+    
+    return websites
 
-
-def periodic_monitoring(interval=3600):  # 1 hour by default
+async def periodic_monitoring(interval=3600):  # 1 hour by default
     while True:
-        check_websites()
+        await check_websites()
         time.sleep(interval)
