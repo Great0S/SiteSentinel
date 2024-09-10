@@ -1,0 +1,21 @@
+import pathlib
+from fastapi import FastAPI, Request
+from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
+from app.website_monitor.monitor import check_websites
+
+app = FastAPI()
+BASE_DIR = pathlib.Path(__file__).parent
+templates = Jinja2Templates(directory="app/templates")
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+
+@app.get("/")
+def home():
+    return {"message": "First FastAPI app"}
+
+@app.get("/websites", response_class=HTMLResponse)
+async  def websites_data(request: Request):
+    websites = await check_websites()
+    return templates.TemplateResponse("websites.html", {"request": request, "websites": websites})

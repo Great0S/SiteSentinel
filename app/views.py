@@ -2,8 +2,8 @@ from fastapi import FastAPI, Depends, HTTPException, Body
 from sqlalchemy.orm import Session
 from datetime import datetime
 
-from db.models.website_data import Website
-from db.database import get_db
+from app.models.website_data import Website
+from app.database import get_db
 
 app = FastAPI()
 
