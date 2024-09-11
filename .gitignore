@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 screenshots/
+metadata.json
 
 # C extensions
 *.so
@@ -165,3 +166,6 @@ website_monitor/domainler.xlsx
 screenshot_metadata.json
 run.bat
 test.py
+app/website_monitor/domainler - Copy.xlsx
+metadata.json
+metadata.json

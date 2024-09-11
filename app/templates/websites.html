@@ -80,7 +80,6 @@
                 <th>IP Address</th>
                 <th>Status Code</th>
                 <th>Status</th>
-                <th>Error Count</th>
                 <th>Screenshot</th>
             </tr>
         </thead>
@@ -93,7 +92,6 @@
                 <td class="{% if info['status'] == 'Up' %}status-up{% elif info['status'] == 'Down' %}status-down{% else %}status-error{% endif %}">
                     {{ info['status'] }}
                 </td>
-                <td>{{ info['error_count'] }}</td>
                 <td>
                     {% if info['screenshot'] %}
                     <img src="/static/screenshots/{{ info['screenshot'] }}" alt="Screenshot" width="200" />

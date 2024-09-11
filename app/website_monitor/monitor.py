@@ -26,7 +26,7 @@ EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
 ERROR_THRESHOLD = 3
 RETRY_COUNT = 3
-METADATA_FILE = "metadata.json"
+METADATA_FILE = "app\\website_monitor\\domainler.xlsx"
 
 # Logging configuration
 logging.basicConfig(
@@ -40,41 +40,53 @@ websites = {}
 def load_metadata():
     if os.path.exists(METADATA_FILE):
         try:
-            with open(METADATA_FILE, "r") as file:
-                content = file.read()
-                if content.strip():  # Check if the file is not empty
-                    return json.loads(content)
-                else:
-                    return {}
-        except json.JSONDecodeError as e:
-            # Handle JSON decode errors (e.g., empty or invalid JSON)
-            print(f"Error decoding JSON from file {METADATA_FILE}: {e}")
+            df = pd.read_excel(METADATA_FILE, engine="openpyxl")
+            if not df.empty:  # Check if the file is not empty
+                df = df.replace({float('nan'): None})
+                return df.set_index('domain').T.to_dict()  # Convert to dictionary
+            else:
+                return {}
+        except Exception as e:
+            # Handle file read errors
+            print(f"Error reading Excel file {METADATA_FILE}: {e}")
             return {}
     return {}
 
 def save_metadata(metadata):
-    with open(METADATA_FILE, "w") as file:
-        json.dump(metadata, file, indent=4)
+    try:
+         # Convert dictionary to DataFrame with 'domain' as a column
+        df = pd.DataFrame.from_dict(metadata, orient='index')
+        df.index.name = 'domain'  # Set 'domain' as index to move it to a column
+        df.reset_index(inplace=True)  # Convert the index (domain) back to a normal column
+        
+        # Save the DataFrame back to an Excel file
+        df.to_excel(METADATA_FILE, index=False, engine="openpyxl")
+    except Exception as e:
+        print(f"Error writing Excel file {METADATA_FILE}: {e}")
 
 
 def update_metadata(website, screenshot_name):
+    logging.info(f"Updating metadata for {website}")
     metadata = load_metadata()
     data = {
             "last_captured": time.time(),
             "screenshot_path": screenshot_name,}
     if metadata:
-        metadata[website] = data
+        metadata['domain'][website] = data
         save_metadata(metadata)
     else:
         save_metadata({website: data})
 
 
-def get_website_ip(website_url):
+async def fetch_website_ip(session, url):
+    website = f"https://www.{url}/"
     try:
-        return socket.gethostbyname(website_url)
-    except (socket.error, socket.gaierror):
-        return "IP Not Found"
-
+        async with session.get(website) as response:
+            ip = socket.gethostbyname(url)  # Example for fetching IP
+            status = "Up" if response.status == 200 else "Down"
+            return website, ip, status, response.status
+    except Exception as e:
+        return website, "IP Not Found", "Down", None
 
 async def get_website_screenshot(website_url, output_folder="app/static/screenshots"):
     if not os.path.exists(output_folder):
@@ -86,74 +98,79 @@ async def get_website_screenshot(website_url, output_folder="app/static/screensh
             screenshot_filename = f"{website_url.replace('https://', '').replace('/', '_')}.png"
             screenshot_path = os.path.join(output_folder, screenshot_filename)
 
-            options = {"headless": True, "args": ["--no-sandbox", "--disable-gpu"]}
+            options = {"headless": True, "slow_mo": 0}
             browser = await p.chromium.launch(**options)
             page = await browser.new_page()
-            await page.goto(website_url, wait_until="networkidle")
+            await page.goto(website_url, wait_until="load")
             await page.screenshot(path=screenshot_path) 
             await browser.close()
 
-            update_metadata(website_url, screenshot_filename)
             return screenshot_filename
 
         except Exception as e:
-            logging.error(f"Error capturing screenshot for {website_url}: {e}")
+            if e.name == "TimeoutError":
+                logging.error(f"Capturing screenshot for {website_url} Timed out")
+                return None
+            else:
+                logging.error(f"Error capturing screenshot for {website_url}: {e}")
 
-async def add_screenshot_to_website(website):
-    global websites
+def add_screenshot_to_website(url):
+    global metadata
     try:
-        last_captured = websites[website].get("last_captured")
-        website_ip = websites[website].get("ip")
+        last_captured = metadata[url].get("last_captured")
         current_time = time.time()
-
-        if website_ip == "IP Not Found":
-            return
+        website = f"https://www.{url}/"
     
         if last_captured is None or last_captured + 3600 <= current_time:  # Check if more than an hour has passed
             
-            screenshot_filename = await get_website_screenshot(website)
-            websites[website]["screenshot"] = screenshot_filename
-            websites[website]["last_captured"] = time.time()
-            logging.info(f"Screenshot added for {website}")
+            screenshot_filename = asyncio.run(get_website_screenshot(website))
+            time_taken = current_time - time.time()
+            logging.info(f"get_website_screenshot function time taken {time_taken:.2f}")
+            metadata[url]["screenshot"] = screenshot_filename
+            metadata[url]["last_captured"] = time.time()
+            logging.info(f"Screenshot added for {url}")
+
         else:
-            logging.info(f"Screenshot already exists for {website}")
+            logging.info(f"Screenshot already exists for {url}")
     except Exception as e:
-        logging.error(f"Error adding screenshot for {website}: {e}")
+        logging.error(f"Error adding screenshot for {url}: {e}")
 
-
-async def load_websites_from_excel(file_path: str = "app\\website_monitor\\domainler.xlsx"):
-    global websites
+async def load_websites_from_excel():
+    global metadata
     try:
-        df = pd.read_excel(file_path, engine="openpyxl")
-        df["Domain"] = df["Domain"].str.strip().str.lower()  # Remove leading/trailing whitespace and convert to lowercase
+        # df = pd.read_excel(file_path, engine="openpyxl")
+        # df["Domain"] = df["Domain"].str.strip().str.lower()  # Remove leading/trailing whitespace and convert to lowercase
         metadata = load_metadata()
         loop = asyncio.get_event_loop()
+
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=50)) as session:
+            tasks = [fetch_website_ip(session, url) for url, _ in metadata.items()]
+            results = await asyncio.gather(*tasks)
         
-        with ThreadPoolExecutor(max_workers=15) as executor:  # Limit to 5 concurrent threads
-            for url in df["Domain"].dropna():
-                website = f"https://www.{url}/"
-                ip_address = await loop.run_in_executor(executor, get_website_ip, url)
-                websites[website] = {
-                    "ip": ip_address,
-                    "status": "Unknown",
-                    "error_count": 0,
-                    "status_code": 0,
-                    "last_captured": metadata.get(website, {}).get("last_captured"),
-                    "screenshot": metadata.get(website, {}).get("screenshot_path"),
+        website_state = {website: {"ip": ip, "status": status, "status_code": status_code} for website, ip, status, status_code in results}
+        
+        with ThreadPoolExecutor(max_workers=20) as executor:  # Limit to 20 concurrent threads
+            for url, data in metadata.items():
+                
+                website = f"https://www.{url}/"                
+                metadata[url] = {
+                    "ip": website_state[website]["ip"],
+                    "status": website_state[website]["status"],
+                    "status_code": website_state[website]["status_code"],
+                    "last_captured": data.get("last_captured", None),
+                    "screenshot": data.get("screenshot", None),
                 }
                 
+                if metadata[url]["ip"] == "IP Not Found":
+                    continue
 
-                if loop.is_running():
-                    # Offload blocking work to a thread pool to avoid blocking the event loop
-                    loop.run_in_executor(executor, lambda: asyncio.run(add_screenshot_to_website(website)))
-                else:
-                    asyncio.run(add_screenshot_to_website(website))
-
-                metadata = load_metadata()
+                screenshot_future = loop.run_in_executor(executor, add_screenshot_to_website, url)
+                await screenshot_future
                 
-
+        if metadata:
+            save_metadata(metadata)
         logging.info("Websites loaded from Excel")
-        return websites
+        return metadata
     except Exception as e:
         logging.error(f"Error loading Excel file: {e}")
         return {}
@@ -172,53 +189,57 @@ def send_email_alert(website):
         logging.error(f"Failed to send email for {website}. Exception: {e}")
 
 
-def check_website(url):
-    global websites
-    for _ in range(RETRY_COUNT + 1):
-        try:
-            with requests.get(url, timeout=30, stream=True) as response:
+# def check_website(url):
+#     global websites
+#     for _ in range(RETRY_COUNT + 1):
+#         try:
+#             with requests.get(url, timeout=7) as response:
                 
-                websites[url]["status_code"] = response.status_code
-                if response.status_code == 200:
-                    websites[url]["status"] = "Up"
-                    websites[url]["error_count"] = 0  # Reset error count
-                    logging.info(f"Website is available: {url}")
-                    return True
-                else:
-                    logging.warning(
-                        f"Error: {url} returned status code {
-                            response.status_code}"
-                    )
-        except requests.exceptions.ConnectionError as e:
-            logging.error(f"Error: {url} is not reachable. Exception: {e}")
+#                 websites[url]["status_code"] = response.status_code
+#                 if response.status_code == 200:
+#                     websites[url]["status"] = "Up"
+#                     websites[url]["error_count"] = 0  # Reset error count
+#                     logging.info(f"Website is available: {url}")
+#                     return True
+#                 else:
+#                     logging.warning(
+#                         f"Error: {url} returned status code {
+#                             response.status_code}"
+#                     )
+#         except requests.exceptions.ConnectionError as e:
+#             logging.error(f"Error: {url} is not reachable. Exception: {e}")
 
-    websites[url]["error_count"] += 1  # Increment error count
-    if websites[url]["error_count"] >= ERROR_THRESHOLD:
-        websites[url]["status"] = "Down"
-    else:
-        websites[url]["status"] = "Error"
-        # send_email_alert(url)
+#     websites[url]["error_count"] += 1  # Increment error count
+#     if websites[url]["error_count"] >= ERROR_THRESHOLD:
+#         websites[url]["status"] = "Down"
+#     else:
+#         websites[url]["status"] = "Error"
+#         # send_email_alert(url)
 
-    logging.error(
-        f"{url} has been down for {
-            websites[url]['error_count']} consecutive checks"
-    )
-    return False
+#     logging.error(
+#         f"{url} has been down for {
+#             websites[url]['error_count']} consecutive checks"
+#     )
+#     return False
 
 
-async def check_websites():
-    global websites
+# async def check_websites():
+#     global websites
     
-    # Load websites from Excel
-    await load_websites_from_excel()
-    for website in websites:
+#     # Load websites from Excel
+#     await load_websites_from_excel()
+#     for website in websites:
 
-        web_thread = Thread(target=check_website, args=(website,))
-        web_thread.start()
+#         web_thread = Thread(target=check_website, args=(website,))
+#         web_thread.start()
     
-    return websites
+#     return websites
 
 async def periodic_monitoring(interval=3600):  # 1 hour by default
     while True:
-        await check_websites()
+        logging.info("Periodic monitoring started")
+        start = time.time()
+        await load_websites_from_excel()
+        taken = time.time() - start
+        logging.info(f"Periodic monitoring time taken {taken:.2f}")
         time.sleep(interval)
