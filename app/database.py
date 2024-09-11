@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from db.models import Base  # Replace with the path to your models file
+from app.models import Base  # Replace with the path to your models file
 
 # Database connection details (replace with your own)
 DATABASE_URL = 'sqlite:///websites.db'  #Sqllite

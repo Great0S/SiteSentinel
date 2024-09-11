@@ -1,19 +1,16 @@
 import asyncio
-from concurrent.futures import ThreadPoolExecutor
 import sys
 import pandas as pd
 import aiohttp
 import smtplib
 import logging
 import os
-import json
-import socket
 import time
-from playwright.sync_api import sync_playwright
-from threading import Thread
 from rich.logging import RichHandler
-import requests
 from playwright.async_api import async_playwright
+from concurrent.futures import ThreadPoolExecutor
+
+from app.utils import enrich_metadata
 
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
@@ -26,7 +23,7 @@ EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
 ERROR_THRESHOLD = 3
 RETRY_COUNT = 3
-METADATA_FILE = "app\\website_monitor\\domainler.xlsx"
+METADATA_FILE = "app/website_monitor/domainler.xlsx"
 
 # Logging configuration
 logging.basicConfig(
@@ -77,16 +74,6 @@ def update_metadata(website, screenshot_name):
     else:
         save_metadata({website: data})
 
-
-async def fetch_website_ip(session, url):
-    website = f"https://www.{url}/"
-    try:
-        async with session.get(website) as response:
-            ip = socket.gethostbyname(url)  # Example for fetching IP
-            status = "Up" if response.status == 200 else "Down"
-            return website, ip, status, response.status
-    except Exception as e:
-        return website, "IP Not Found", "Down", None
 
 async def get_website_screenshot(website_url, output_folder="app/static/screenshots"):
     if not os.path.exists(output_folder):
@@ -143,9 +130,9 @@ async def load_websites_from_excel():
         metadata = load_metadata()
         loop = asyncio.get_event_loop()
 
-        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=50)) as session:
-            tasks = [fetch_website_ip(session, url) for url, _ in metadata.items()]
-            results = await asyncio.gather(*tasks)
+        
+        tasks = [enrich_metadata(url) for url, _ in metadata.items()]   
+        results = await asyncio.gather(*tasks)
         
         website_state = {website: {"ip": ip, "status": status, "status_code": status_code} for website, ip, status, status_code in results}
         
@@ -180,60 +167,12 @@ def send_email_alert(website):
         with smtplib.SMTP_SSL(EMAIL_SERVER, EMAIL_PORT) as server:
             server.login(EMAIL_SENDER, EMAIL_PASSWORD)
             subject = f"Website Down Alert: {website}"
-            body = f"ALERT: The website {website} is down for {
-                ERROR_THRESHOLD} consecutive checks."
+            body = f"ALERT: The website {website} is down for {ERROR_THRESHOLD} consecutive checks."
             message = f"Subject: {subject}\n\n{body}"
             server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, message)
             logging.info(f"Email alert sent for {website}")
     except Exception as e:
         logging.error(f"Failed to send email for {website}. Exception: {e}")
-
-
-# def check_website(url):
-#     global websites
-#     for _ in range(RETRY_COUNT + 1):
-#         try:
-#             with requests.get(url, timeout=7) as response:
-                
-#                 websites[url]["status_code"] = response.status_code
-#                 if response.status_code == 200:
-#                     websites[url]["status"] = "Up"
-#                     websites[url]["error_count"] = 0  # Reset error count
-#                     logging.info(f"Website is available: {url}")
-#                     return True
-#                 else:
-#                     logging.warning(
-#                         f"Error: {url} returned status code {
-#                             response.status_code}"
-#                     )
-#         except requests.exceptions.ConnectionError as e:
-#             logging.error(f"Error: {url} is not reachable. Exception: {e}")
-
-#     websites[url]["error_count"] += 1  # Increment error count
-#     if websites[url]["error_count"] >= ERROR_THRESHOLD:
-#         websites[url]["status"] = "Down"
-#     else:
-#         websites[url]["status"] = "Error"
-#         # send_email_alert(url)
-
-#     logging.error(
-#         f"{url} has been down for {
-#             websites[url]['error_count']} consecutive checks"
-#     )
-#     return False
-
-
-# async def check_websites():
-#     global websites
-    
-#     # Load websites from Excel
-#     await load_websites_from_excel()
-#     for website in websites:
-
-#         web_thread = Thread(target=check_website, args=(website,))
-#         web_thread.start()
-    
-#     return websites
 
 async def periodic_monitoring(interval=3600):  # 1 hour by default
     while True:
