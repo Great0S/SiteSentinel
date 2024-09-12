@@ -133,8 +133,9 @@ async def load_websites_from_excel():
         
         tasks = [enrich_metadata(url) for url, _ in metadata.items()]   
         results = await asyncio.gather(*tasks)
+        pass
         
-        website_state = {website: {"ip": ip, "status": status, "status_code": status_code} for website, ip, status, status_code in results}
+        website_state = {website: data for x in results for website, data in x.items()}
         
         with ThreadPoolExecutor(max_workers=20) as executor:  # Limit to 20 concurrent threads
             for url, data in metadata.items():
