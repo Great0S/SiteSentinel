@@ -1,10 +1,14 @@
-from datetime import datetime
+
 import os
 import socket
 import ssl
 import time
 import ipinfo
 import httpx
+from datetime import datetime
+from tenacity import retry, stop_after_attempt, wait_fixed
+from app import logger
+
 
 
 def get_geolocation(ip):
@@ -17,6 +21,7 @@ def get_geolocation(ip):
     except Exception as e:
         return {"error": str(e)}
     
+@retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
 async def get_dns_info(domain):
     website = f"https://www.{domain}/"
     session = httpx.AsyncClient()
@@ -27,9 +32,17 @@ async def get_dns_info(domain):
         dns_time = time.time() - start_time
         status = "Up" if response.status_code == 200 else "Down"
         
-        return {"ip": ip, "status": status, "status_code": response.status_code, "headers": response.headers, "dns_resolution_time": dns_time}
+        return {
+            "ip": ip,
+            "status": status,
+            "status_code": response.status_code,
+            "headers": response.headers,
+            "dns_resolution_time": dns_time
+        }
     except Exception as e:
+        logger.error(f"Error retrieving DNS info for {domain}: {e}")
         return {"error": str(e)}
+
 
 async def get_ssl_certificate_info(domain):
     try:
@@ -54,10 +67,20 @@ async def get_ssl_certificate_info(domain):
         return {"error": str(e)}
     
 
-async def enrich_metadata(url):
-    dns_info = await get_dns_info(url)
-    ssl_info = await get_ssl_certificate_info(url)
-    location_info = get_geolocation(dns_info.get("ip", ""))
+async def enrich_metadata(url, metadata):
+
+    last_captured = metadata[url].get("last_captured")
+    current_time = time.time()
+    website = f"https://www.{url}/"
+    
+    if last_captured is None or last_captured + 7200 <= current_time:
+
+        dns_info = await get_dns_info(url)
+        ssl_info = await get_ssl_certificate_info(url)
+        location_info = get_geolocation(dns_info.get("ip", ""))
+
+    else:
+        return {website: metadata[url]}
 
     # DNS Information
     dns_data = {
@@ -65,7 +88,7 @@ async def enrich_metadata(url):
         "status": dns_info.get("status", "Unknown"),
         "status_code": dns_info.get("status_code", 0),
         "headers": dns_info.get("headers", {}),
-        "dns_resolution_time": dns_info.get("dns_resolution_time", None)
+        "dns_resolution_time": dns_info.get("dns_resolution_time", 0) / 1000
     }
 
     # SSL Information
@@ -105,3 +128,9 @@ async def enrich_metadata(url):
     }
 
     return data
+
+def log_with_context(message: str, context: dict = None):
+    if context:
+        logger.info(f"{message} | Context: {context}")
+    else:
+        logger.info(message)

@@ -1,10 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from app.config import settings, Base 
 
-from app.models import Base  # Replace with the path to your models file
 
 # Database connection details (replace with your own)
-DATABASE_URL = 'sqlite:///websites.db'  #Sqllite
+DATABASE_URL = f"{settings.database.db_driver}:///./{settings.database.db_name}"
 # DATABASE_URL = 'postgresql://user:password@host:port/database_name'  # Example for PostgreSQL
 
 # Create the database engine
@@ -13,6 +13,9 @@ engine = create_engine(DATABASE_URL)
 # Create a session maker bound to the engine
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
+# Create the database tables
+Base.metadata.create_all(bind=engine)
 
 def get_db():
     """

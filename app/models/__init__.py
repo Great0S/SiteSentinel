@@ -1,3 +1,2 @@
-from sqlalchemy.orm import declarative_base
-
-Base = declarative_base() # model base class
+from .website_data import WebsiteMetadata, Base, Website
+from .auth import *

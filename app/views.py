@@ -1,11 +1,7 @@
-from fastapi import FastAPI, Depends, HTTPException, Body
+from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from datetime import datetime
-
-from app.models.website_data import Website
-from app.database import get_db
-
-app = FastAPI()
+from app import Website, get_db, app
 
 
 @app.get("/websites", response_model=list[Website])
@@ -40,28 +36,28 @@ def get_website(website_id: int, db: Session = Depends(get_db)):
     return website
 
 
-@app.put("/websites/{website_id}", response_model=Website)
-def update_website(website_id: int, website_data: Website = Body(...), db: Session = Depends(get_db)):
-    """
-    Updates a specific website in the database.
-    """
-    db_website = db.query(Website).filter(Website.id == website_id).first()
-    if not db_website:
-        raise HTTPException(status_code=404, detail="Website not found")
+# @app.put("/websites/{website_id}", response_model=Website)
+# def update_website(website_id: int, website_data: Website = Body(...), db: Session = Depends(get_db)):
+#     """
+#     Updates a specific website in the database.
+#     """
+#     db_website = db.query(Website).filter(Website.id == website_id).first()
+#     if not db_website:
+#         raise HTTPException(status_code=404, detail="Website not found")
 
-    # Update specific fields (customize as needed)
-    db_website.url = website_data.url
-    db_website.ip_address = website_data.ip_address
-    db_website.status = website_data.status
-    db_website.error_count = website_data.error_count
-    db_website.status_code = website_data.status_code
+#     # Update specific fields (customize as needed)
+#     db_website.url = website_data.url
+#     db_website.ip_address = website_data.ip_address
+#     db_website.status = website_data.status
+#     db_website.error_count = website_data.error_count
+#     db_website.status_code = website_data.status_code
 
-    # Update capture timestamp for partial updates
-    db_website.last_captured = datetime.now()
+#     # Update capture timestamp for partial updates
+#     db_website.last_captured = datetime.now()
 
-    db.commit()
-    db.refresh(db_website)
-    return db_website
+#     db.commit()
+#     db.refresh(db_website)
+#     return db_website
 
 
 @app.delete("/websites/{website_id}")

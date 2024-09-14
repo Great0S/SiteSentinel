@@ -1,107 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Website Monitoring Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- DataTables CSS CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.min.css"
+    />
+    <!-- Custom styles for DataTables to work better with Tailwind -->
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            font-size: 12px;
-        }
-        h1 {
-            text-align: center;
-            font-size: 18px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .status-up {
-            color: green;
-            font-weight: bold;
-        }
-        .status-down {
-            color: red;
-            font-weight: bold;
-        }
-        .status-error {
-            color: orange;
-            font-weight: bold;
-        }
-        .export-btn {
-            display: block;
-            width: 200px;
-            margin: 20px auto;
-            padding: 10px;
-            text-align: center;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-        .export-btn:hover {
-            background-color: #0056b3;
-        }
-
-        /* Hide the export button in the PDF */
-        @media print {
-            .no-print {
-                display: none;
-            }
-        }
+      table.dataTable thead th {
+        background-color: #f2f2f2;
+        border-bottom: 2px solid #ddd;
+      }
     </style>
-</head>
-<body>
-    <h1>Website Monitoring Dashboard</h1>
-    <a href="/export_pdf" class="export-btn no-print">Export to PDF</a>
-    <table>
-        <thead>
+  </head>
+  <body class="bg-gray-100 text-gray-900">
+    <div class="container mx-auto p-4">
+      <h1 class="text-center text-3xl font-extrabold mb-8 text-blue-600">
+        Website Monitoring Dashboard
+      </h1>
+      <div class="flex justify-center mb-6">
+        <a
+          href="/export_pdf"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition duration-300 ease-in-out transform hover:scale-105 no-print"
+        >
+          Export to PDF
+        </a>
+      </div>
+      <div class="overflow-x-auto">
+        <table
+          id="monitoringTable"
+          class="min-w-full bg-white shadow-lg rounded-lg border border-gray-200"
+          style="width: 100%"
+        >
+          <thead>
             <tr>
-                <th>Website</th>
-                <th>IP Address</th>
-                <th>Status Code</th>
-                <th>Status</th>
-                <th>Screenshot</th>
+              <th
+                class="px-6 py-3 bg-gray-200 text-left text-center font-medium text-gray-700 uppercase tracking-wider"
+              >
+                Website
+              </th>
+              <th
+                class="px-6 py-3 bg-gray-200 text-left text-center font-medium text-gray-700 uppercase tracking-wider"
+              >
+                DNS Info
+              </th>
+              <th
+                class="px-6 py-3 bg-gray-200 text-left text-center font-medium text-gray-700 uppercase tracking-wider"
+              >
+                SSL Info
+              </th>
+              <th
+                class="px-6 py-3 bg-gray-200 text-left text-center font-medium text-gray-700 uppercase tracking-wider"
+              >
+                Location Info
+              </th>
+              <th
+                class="px-6 py-3 bg-gray-200 text-left text-center font-medium text-gray-700 uppercase tracking-wider"
+              >
+                Screenshot
+              </th>
             </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
             {% for website, info in websites.items() %}
-            <tr>
-                <td>{{ website }}</td>
-                <td>{{ info['ip'] }}</td>
-                <td>{{ info['status_code'] }}</td>
-                <td class="{% if info['status'] == 'Up' %}status-up{% elif info['status'] == 'Down' %}status-down{% else %}status-error{% endif %}">
-                    {{ info['status'] }}
-                </td>
-                <td>
-                    {% if info['screenshot'] %}
-                    <img src="/static/screenshots/{{ info['screenshot'] }}" alt="Screenshot" width="200" />
-                    {% else %}
-                    No Screenshot
-                    {% endif %}
-                </td>
+            <tr
+              class="even:bg-gray-100 hover:bg-gray-50 transition duration-200"
+            >
+              <td class="border px-6 py-4">
+                <h2
+                  class="text-xl font-bold leading-6 text-gray-900 sm:truncate sm:text-2xl sm:tracking-tight"
+                >
+                  {{ website }}
+                </h2>
+              </td>
+              <td class="border px-6 py-4">
+                <div>
+                  <p class="text-xs text-gray-600">
+                    <b>IP:</b> {{ info['ip'] }}
+                  </p>
+                  <p class="text-xs text-gray-600">
+                    <b>Status:</b> {{ info['status'] }}
+                  </p>
+                  <p class="text-xs text-gray-600">
+                    <b>Status Code:</b> {{ info['status_code'] }}
+                  </p>
+                  <p class="text-xs text-gray-600">
+                    <b>DNS Resolution Time:</b> {{ info['dns_resolution_time'] | round(3) }} seconds
+                  </p>
+                </div>
+              </td>
+              <td class="border px-6 py-4">
+                <div>
+                  <p class="text-xs text-gray-600">
+                    <b>Issued To:</b> {{ info['ssl_issued_to'] }}
+                  </p>
+                  <p class="text-xs text-gray-600">
+                    <b>Issuer:</b> {{ info['ssl_issuer'] }}
+                  </p>
+                  <p class="text-xs text-gray-600">
+                    <b>Valid From:</b> {{ info['ssl_valid_from'] }}
+                  </p>
+                  <p class="text-xs text-gray-600">
+                    <b>Valid Until:</b> {{ info['ssl_valid_until'] }}
+                  </p>
+                </div>
+              </td>
+              <td class="border px-6 py-4">
+                <div>
+                  <p class="text-xs text-gray-600">
+                    <b>Hostname:</b> {{ info['hostname'] }}
+                  </p>
+                  <p class="text-xs text-gray-600">
+                    <b>City:</b> {{ info['city'] }}
+                  </p>
+                  <p class="text-xs text-gray-600">
+                    <b>Region:</b> {{ info['region'] }}
+                  </p>
+                  <p class="text-xs text-gray-600">
+                    <b>Country:</b> {{ info['country'] }}
+                  </p>
+                  <p class="text-xs text-gray-600">
+                    <b>Latitude:</b> {{ info['latitude'] }}
+                  </p>
+                  <p class="text-xs text-gray-600">
+                    <b>Longitude:</b> {{ info['longitude'] }}
+                  </p>
+                </div>
+              </td>
+              <td class="border px-6 py-4">
+                {% if info['screenshot'] %}
+                <img
+                  src="/static/screenshots/{{ info['screenshot'] }}"
+                  alt="Screenshot"
+                  class="w-32 h-auto rounded shadow"
+                />
+                {% else %} No Screenshot {% endif %}
+              </td>
             </tr>
             {% endfor %}
-        </tbody>
-    </table>
-</body>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS CDN -->
+    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.min.js"></script>
+
+    <!-- Initialize DataTables -->
+    <script>
+      $(document).ready(function () {
+        $("#monitoringTable").DataTable();
+      });
+    </script>
+  </body>
 </html>
