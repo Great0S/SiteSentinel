@@ -1,17 +1,23 @@
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import HTMLResponse, JSONResponse
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from app import app, settings, logger, authenticate_user, get_user, fake_users_db, load_websites_from_excel, create_website, get_website, get_websites, templates, get_db, WebsiteMetadata
+from app.database import init_models
+from app.models.auth import User
+from sqlalchemy.future import select
 
+
+
+@app.on_event("startup")
+async def startup_event():
+    await init_models()  # Call the function to create tables
 
 
 @app.get("/")
 def home():
     logger.info("Home endpoint accessed")
     return {"message": "First FastAPI app with SQLAlchemy!"}
-
-
 
 @app.post("/token")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
@@ -24,16 +30,21 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
         )
     return {"access_token": user.username, "token_type": "bearer"}
 
+@app.post("/users/")
+async def create_user(name: str, email: str, db: AsyncSession = Depends(get_db)):
+    """Create a new user."""
+    new_user = User(name=name, email=email)
+    async with db.begin():
+        db.add(new_user)
+    return {"name": new_user.name, "email": new_user.email}
 
-
-@app.get("/users/me")
-async def read_users_me(token: str = Depends(settings.oauth2_scheme)):
-    user = get_user(fake_users_db, token)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
-
-
+@app.get("/users/")
+async def read_users(db: AsyncSession = Depends(get_db)):
+    """Retrieve all users."""
+    async with db.begin():
+        result = await db.execute(select(User))
+        users = result.scalars().all()
+    return users
 
 @app.get("/websites", response_class=HTMLResponse)
 async def websites_data(request: Request):
@@ -42,26 +53,25 @@ async def websites_data(request: Request):
 
 
 
-@app.post("/websites", response_model=WebsiteMetadata)
-def add_website(website_data: dict, db: Session = Depends(get_db)):
-    """Add a new website."""
-    website = create_website(db=db, website_data=website_data)
-    logger.info(f"Website added: {website.url}")
-    return website
+@app.post("/websites/")
+async def add_website(url: str, description: str, db: AsyncSession = Depends(get_db)):
+    """Create a new website."""
+    new_website = await create_website(db=db, url=url, description=description)
+    return {"url": new_website.url, "description": new_website.description}
+
+@app.get("/websites/")
+async def read_websites(skip: int = 0, limit: int = 10, db: AsyncSession = Depends(get_db)):
+    """Retrieve all websites."""
+    websites = await get_websites(db=db, skip=skip, limit=limit)
+    return websites
 
 @app.get("/websites/{website_id}")
-def read_website(website_id: int, db: Session = Depends(get_db)):
+async def read_website(website_id: int, db: AsyncSession = Depends(get_db)):
     """Retrieve a specific website by ID."""
-    website = get_website(db=db, website_id=website_id)
+    website = await get_website(db=db, website_id=website_id)
     if website is None:
         raise HTTPException(status_code=404, detail="Website not found")
-    return website
-
-
-@app.get("/websites/raw", response_model=list[WebsiteMetadata])
-async def read_websites(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    """Retrieve a list of websites."""
-    websites = get_websites(db, skip=skip, limit=limit)
+    return {"url": website.url, "description": website.description}
     return websites
 
 

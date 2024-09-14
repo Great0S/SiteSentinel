@@ -1,18 +1,24 @@
-from sqlalchemy.orm import Session
+# app/crud.py
+
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 from app.models import Website
 
-def create_website(db: Session, website_data: dict):
+async def create_website(db: AsyncSession, url: str, description: str):
     """Create a new website entry in the database."""
-    website = Website(**website_data)
-    db.add(website)
-    db.commit()
-    db.refresh(website)
-    return website
+    new_website = Website(url=url, description=description)
+    async with db.begin():
+        db.add(new_website)
+    return new_website
 
-def get_websites(db: Session, skip: int = 0, limit: int = 10):
+async def get_websites(db: AsyncSession, skip: int = 0, limit: int = 10):
     """Retrieve websites from the database."""
-    return db.query(Website).offset(skip).limit(limit).all()
+    async with db.begin():
+        result = await db.execute(select(Website).offset(skip).limit(limit))
+        return result.scalars().all()
 
-def get_website(db: Session, website_id: int):
+async def get_website(db: AsyncSession, website_id: int):
     """Retrieve a specific website by ID."""
-    return db.query(Website).filter(Website.id == website_id).first()
+    async with db.begin():
+        result = await db.execute(select(Website).where(Website.id == website_id))
+        return result.scalar_one_or_none()

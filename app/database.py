@@ -1,35 +1,24 @@
-from sqlalchemy import create_engine
+import asyncio
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from app.config import settings, Base 
 
 
 # Database connection details (replace with your own)
-DATABASE_URL = f"{settings.database.db_driver}:///./{settings.database.db_name}"
+DATABASE_URL = f"{settings.database.db_driver}://{settings.database.db_user}:{settings.database.db_password}@{settings.database.db_host}:{settings.database.db_port}/{settings.database.db_name}"
 # DATABASE_URL = 'postgresql://user:password@host:port/database_name'  # Example for PostgreSQL
 
 # Create the database engine
-engine = create_engine(DATABASE_URL)
+engine = create_async_engine(DATABASE_URL, echo=True)
 
 # Create a session maker bound to the engine
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+AsyncSessionLocal = sessionmaker(bind=engine, class_=AsyncSession)
 
+async def init_models():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)  # Drop all tables
+        await conn.run_sync(Base.metadata.create_all)  # Create all tables
 
-# Create the database tables
-Base.metadata.create_all(bind=engine)
-
-def get_db():
-    """
-    Function to create a new database session.
-
-    Returns:
-        A new database session.
-    """
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-# Create all tables in the database (optional)
-# Base.metadata.create_all(engine)  # Uncomment to create tables on first run
+async def get_db():
+    async with AsyncSessionLocal() as session:
+        yield session
