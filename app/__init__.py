@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from .config import Settings, logger
-from .models.auth import authenticate_user, get_user, fake_users_db
+# from .models.auth import authenticate_user, get_user, fake_users_db
 from .models.website_data import WebsiteMetadata
 from .database import get_db
 from .crud import create_website, get_website, get_websites

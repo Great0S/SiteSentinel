@@ -1,12 +1,11 @@
-from fastapi import Depends, HTTPException, Request, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-from app import app, settings, logger, authenticate_user, get_user, fake_users_db, load_websites_from_excel, create_website, get_website, get_websites, templates, get_db, WebsiteMetadata
-from app.database import init_models
-from app.models.auth import User
-from sqlalchemy.future import select
+from app import app, logger,load_websites_from_excel, create_website, get_website, get_websites, templates, get_db, WebsiteMetadata
+from app.database import init_models, get_db
+from sqlalchemy.orm import Session
 
+from app.models.website_data import Website
 
 
 @app.on_event("startup")
@@ -19,35 +18,39 @@ def home():
     logger.info("Home endpoint accessed")
     return {"message": "First FastAPI app with SQLAlchemy!"}
 
-@app.post("/token")
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = await authenticate_user(form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return {"access_token": user.username, "token_type": "bearer"}
+# @app.post("/token")
+# async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+#     user = await authenticate_user(form_data.username, form_data.password)
+#     if not user:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Incorrect username or password",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
+#     return {"access_token": user.username, "token_type": "bearer"}
 
-@app.post("/users/")
-async def create_user(name: str, email: str, db: AsyncSession = Depends(get_db)):
-    """Create a new user."""
-    new_user = User(name=name, email=email)
-    async with db.begin():
-        db.add(new_user)
-    return {"name": new_user.name, "email": new_user.email}
+# @app.post("/users/")
+# async def create_user(name: str, email: str, db: AsyncSession = Depends(get_db)):
+#     """Create a new user."""
+#     new_user = User(name=name, email=email)
+#     async with db.begin():
+#         db.add(new_user)
+#     return {"name": new_user.name, "email": new_user.email}
 
-@app.get("/users/")
-async def read_users(db: AsyncSession = Depends(get_db)):
-    """Retrieve all users."""
-    async with db.begin():
-        result = await db.execute(select(User))
-        users = result.scalars().all()
-    return users
+# @app.get("/users/")
+# async def read_users(db: AsyncSession = Depends(get_db)):
+#     """Retrieve all users."""
+#     async with db.begin():
+#         result = await db.execute(select(User))
+#         users = result.scalars().all()
+#     return users
 
-@app.get("/websites", response_class=HTMLResponse)
-async def websites_data(request: Request):
+@app.get("/websites", response_class=HTMLResponse, response_model=list[Website])
+async def websites_data(request: Request, db: Session = Depends(get_db)):
+    """
+    Retrieves a list of all websites from the database.
+    """
+    websites = db.query(Website).all()
     websites = await load_websites_from_excel()
     return templates.TemplateResponse("websites.html", {"request": request, "websites": websites})
 

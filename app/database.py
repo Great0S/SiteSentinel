@@ -9,7 +9,7 @@ DATABASE_URL = f"{settings.database.db_driver}://{settings.database.db_user}:{se
 # DATABASE_URL = 'postgresql://user:password@host:port/database_name'  # Example for PostgreSQL
 
 # Create the database engine
-engine = create_async_engine(DATABASE_URL, echo=True)
+engine = create_async_engine(DATABASE_URL, echo=True, future=True)
 
 # Create a session maker bound to the engine
 AsyncSessionLocal = sessionmaker(bind=engine, class_=AsyncSession)
