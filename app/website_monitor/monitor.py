@@ -142,6 +142,7 @@ async def load_websites_from_excel():
                 await screenshot_future
                 
         if metadata:
+            
             save_metadata(metadata)
         logger.info("Websites loaded from Excel successfully")
         return metadata
