@@ -1,11 +1,9 @@
-from typing import List
 from fastapi import Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from app import app, logger,load_websites_from_excel, create_website, get_website, get_websites, templates, get_db, WebsiteMetadata
 from app.database import init_models, get_db
 from sqlalchemy.orm import Session
-from sqlalchemy import select
 
 from app.models.website_data import Website
 
@@ -47,13 +45,12 @@ def home():
 #         users = result.scalars().all()
 #     return users
 
-@app.get("/websites", response_class=HTMLResponse)
-async def websites_data(request: Request, db: AsyncSession = Depends(get_db)):
+@app.get("/websites", response_class=HTMLResponse, response_model=list[Website])
+async def websites_data(request: Request, db: Session = Depends(get_db)):
     """
     Retrieves a list of all websites from the database.
     """
-    result = await db.execute(select(Website))
-    websites = result.scalars().all()
+    websites = db.query(Website).all()
     websites = await load_websites_from_excel()
     return templates.TemplateResponse("websites.html", {"request": request, "websites": websites})
 
