@@ -40,3 +40,20 @@ class Website(Base):
     ssl_valid_from = Column(DateTime)
     ssl_valid_until = Column(DateTime)
     created_at = Column(DateTime, server_default=func.now())
+
+class WebsiteResponse(BaseModel):
+    id: int
+    url: str
+    ip: Optional[str]
+    status: Optional[str]
+    status_code: Optional[int]
+    headers: Optional[str]
+    dns_resolution_time: Optional[float]
+    ssl_issued_to: Optional[str]
+    ssl_issuer: Optional[str]
+    ssl_valid_from: Optional[datetime]
+    ssl_valid_until: Optional[datetime]
+    created_at: datetime
+
+    class Config:
+        from_attributes = True  # This allows Pydantic to read data from SQLAlchemy models
