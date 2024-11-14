@@ -16,7 +16,7 @@ AsyncSessionLocal = sessionmaker(bind=engine, class_=AsyncSession)
 
 async def init_models():
     async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)  # Drop all tables
+        # await conn.run_sync(Base.metadata.drop_all)  # Drop all tables
         await conn.run_sync(Base.metadata.create_all)  # Create all tables
 
 async def get_db():
