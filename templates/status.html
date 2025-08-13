@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SiteSentinel Status Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .status-up { background-color: #10b981; }
+        .status-down { background-color: #ef4444; }
+        .status-unknown { background-color: #f59e0b; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">
+                <i class="fas fa-shield-alt text-indigo-600 mr-2"></i>
+                SiteSentinel Status
+            </h1>
+            <p class="text-gray-600">Real-time monitoring status for all services</p>
+            <div class="mt-4">
+                <span id="overall-status" class="px-4 py-2 rounded-full text-white font-semibold">
+                    <i class="fas fa-sync fa-spin mr-2"></i>Loading...
+                </span>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white rounded-lg shadow p-6 text-center">
+                <div class="text-2xl font-bold text-green-600" id="uptime-percentage">--%</div>
+                <div class="text-gray-600">Uptime</div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 text-center">
+                <div class="text-2xl font-bold text-blue-600" id="total-services">--</div>
+                <div class="text-gray-600">Services</div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 text-center">
+                <div class="text-2xl font-bold text-yellow-600" id="avg-response">-- ms</div>
+                <div class="text-gray-600">Avg Response</div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 text-center">
+                <div class="text-2xl font-bold text-purple-600" id="health-score">--</div>
+                <div class="text-gray-600">Health Score</div>
+            </div>
+        </div>
+
+        <!-- Services List -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">Service Status</h2>
+            </div>
+            <div id="services-list" class="divide-y divide-gray-200">
+                <!-- Services will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Last Updated -->
+        <div class="text-center mt-8 text-gray-500">
+            <p>Last updated: <span id="last-updated">--</span></p>
+            <p class="mt-2">Auto-refresh every 30 seconds</p>
+        </div>
+    </div>
+
+    <script>
+        let refreshInterval;
+
+        async function loadStatus() {
+            try {
+                const response = await fetch('/api/stats');
+                const statsData = await response.json();
+                
+                const websitesResponse = await fetch('/api/websites');
+                const websitesData = await websitesResponse.json();
+                
+                if (statsData.success && websitesData.success) {
+                    updateStatistics(statsData.stats);
+                    updateServicesList(websitesData.websites);
+                    updateOverallStatus(statsData.stats);
+                    document.getElementById('last-updated').textContent = new Date().toLocaleString();
+                }
+            } catch (error) {
+                console.error('Error loading status:', error);
+                document.getElementById('overall-status').innerHTML = 
+                    '<i class="fas fa-exclamation-triangle mr-2"></i>Error Loading Status';
+                document.getElementById('overall-status').className = 'px-4 py-2 rounded-full bg-red-500 text-white font-semibold';
+            }
+        }
+
+        function updateStatistics(stats) {
+            document.getElementById('uptime-percentage').textContent = Math.round(stats.uptime_percentage) + '%';
+            document.getElementById('total-services').textContent = stats.total_sites;
+            document.getElementById('health-score').textContent = stats.average_health_score;
+        }
+
+        function updateServicesList(websites) {
+            const servicesList = document.getElementById('services-list');
+            servicesList.innerHTML = '';
+
+            for (const [url, data] of Object.entries(websites)) {
+                const serviceItem = document.createElement('div');
+                serviceItem.className = 'px-6 py-4 flex items-center justify-between hover:bg-gray-50';
+                
+                const statusClass = data.status === 'UP' ? 'status-up' : 
+                                  data.status === 'DOWN' ? 'status-down' : 'status-unknown';
+                
+                const healthScore = data.health_score || {score: 0, grade: 'F'};
+                
+                serviceItem.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="status-indicator ${statusClass}"></span>
+                        <div>
+                            <div class="font-medium text-gray-900">${url}</div>
+                            <div class="text-sm text-gray-500">
+                                ${data.response_time || 'N/A'} • 
+                                Health Score: ${healthScore.score}/100 (${healthScore.grade})
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm font-medium ${getStatusColor(data.status)}">${data.status}</div>
+                        <div class="text-xs text-gray-500">${data.last_check || 'Never checked'}</div>
+                    </div>
+                `;
+                
+                servicesList.appendChild(serviceItem);
+            }
+        }
+
+        function updateOverallStatus(stats) {
+            const overallStatus = document.getElementById('overall-status');
+            
+            if (stats.down_sites > 0) {
+                overallStatus.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i>Service Issues';
+                overallStatus.className = 'px-4 py-2 rounded-full bg-red-500 text-white font-semibold';
+            } else if (stats.unknown_sites > 0) {
+                overallStatus.innerHTML = '<i class="fas fa-question-circle mr-2"></i>Partial Outage';
+                overallStatus.className = 'px-4 py-2 rounded-full bg-yellow-500 text-white font-semibold';
+            } else {
+                overallStatus.innerHTML = '<i class="fas fa-check-circle mr-2"></i>All Systems Operational';
+                overallStatus.className = 'px-4 py-2 rounded-full bg-green-500 text-white font-semibold';
+            }
+        }
+
+        function getStatusColor(status) {
+            switch(status) {
+                case 'UP': return 'text-green-600';
+                case 'DOWN': return 'text-red-600';
+                default: return 'text-yellow-600';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStatus();
+            refreshInterval = setInterval(loadStatus, 30000); // Refresh every 30 seconds
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+    </script>
+</body>
+</html>

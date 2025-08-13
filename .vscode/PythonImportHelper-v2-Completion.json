@@ -1,0 +1,925 @@
+[
+    {
+        "label": "Blueprint",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "jsonify",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "request",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "Flask",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "make_response",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "render_template",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "jsonify",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "request",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "redirect",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "url_for",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "flash",
+        "importPath": "flask",
+        "description": "flask",
+        "isExtraImport": true,
+        "detail": "flask",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "datetime",
+        "description": "datetime",
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "websites",
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "isExtraImport": true,
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "check_website",
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "isExtraImport": true,
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "calculate_health_score",
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "isExtraImport": true,
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "periodic_monitoring",
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "isExtraImport": true,
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "websites",
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "isExtraImport": true,
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "threading",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "threading",
+        "description": "threading",
+        "detail": "threading",
+        "documentation": {}
+    },
+    {
+        "label": "Thread",
+        "importPath": "threading",
+        "description": "threading",
+        "isExtraImport": true,
+        "detail": "threading",
+        "documentation": {}
+    },
+    {
+        "label": "asyncio",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "asyncio",
+        "description": "asyncio",
+        "detail": "asyncio",
+        "documentation": {}
+    },
+    {
+        "label": "pandas",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pandas",
+        "description": "pandas",
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "aiohttp",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "aiohttp",
+        "description": "aiohttp",
+        "detail": "aiohttp",
+        "documentation": {}
+    },
+    {
+        "label": "smtplib",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "smtplib",
+        "description": "smtplib",
+        "detail": "smtplib",
+        "documentation": {}
+    },
+    {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "socket",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "socket",
+        "description": "socket",
+        "detail": "socket",
+        "documentation": {}
+    },
+    {
+        "label": "sync_playwright",
+        "importPath": "playwright.sync_api",
+        "description": "playwright.sync_api",
+        "isExtraImport": true,
+        "detail": "playwright.sync_api",
+        "documentation": {}
+    },
+    {
+        "label": "requests",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "requests",
+        "description": "requests",
+        "detail": "requests",
+        "documentation": {}
+    },
+    {
+        "label": "pdfkit",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pdfkit",
+        "description": "pdfkit",
+        "detail": "pdfkit",
+        "documentation": {}
+    },
+    {
+        "label": "secure_filename",
+        "importPath": "werkzeug.utils",
+        "description": "werkzeug.utils",
+        "isExtraImport": true,
+        "detail": "werkzeug.utils",
+        "documentation": {}
+    },
+    {
+        "label": "config",
+        "importPath": "config",
+        "description": "config",
+        "isExtraImport": true,
+        "detail": "config",
+        "documentation": {}
+    },
+    {
+        "label": "dataclass",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
+        "isExtraImport": true,
+        "detail": "dataclasses",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "sqlite3",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sqlite3",
+        "description": "sqlite3",
+        "detail": "sqlite3",
+        "documentation": {}
+    },
+    {
+        "label": "ssl",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "ssl",
+        "description": "ssl",
+        "detail": "ssl",
+        "documentation": {}
+    },
+    {
+        "label": "urlparse",
+        "importPath": "urllib.parse",
+        "description": "urllib.parse",
+        "isExtraImport": true,
+        "detail": "urllib.parse",
+        "documentation": {}
+    },
+    {
+        "label": "get_all_websites",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def get_all_websites():\n    \"\"\"Get all monitored websites with their status\"\"\"\n    try:\n        website_data = {}\n        for url, data in websites.items():\n            website_data[url] = {\n                **data,\n                'health_score': data.get('health_score', {'score': 0, 'grade': 'F'}),\n                'ssl': data.get('ssl', {}),\n                'dns': data.get('dns', {})",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "get_website",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def get_website(url):\n    \"\"\"Get specific website status\"\"\"\n    try:\n        if url not in websites:\n            return jsonify({'success': False, 'error': 'Website not found'}), 404\n        data = websites[url]\n        return jsonify({\n            'success': True,\n            'url': url,\n            'data': {",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "add_website",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def add_website():\n    \"\"\"Add a new website to monitor\"\"\"\n    try:\n        data = request.get_json()\n        url = data.get('url')\n        if not url:\n            return jsonify({'success': False, 'error': 'URL is required'}), 400\n        if not url.startswith(('http://', 'https://')):\n            url = 'https://' + url\n        if url in websites:",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "remove_website",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def remove_website(url):\n    \"\"\"Remove website from monitoring\"\"\"\n    try:\n        if url not in websites:\n            return jsonify({'success': False, 'error': 'Website not found'}), 404\n        del websites[url]\n        return jsonify({\n            'success': True,\n            'message': f'Website {url} removed successfully'\n        })",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "check_website_api",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def check_website_api(url):\n    \"\"\"Manually trigger check for specific website\"\"\"\n    try:\n        if url not in websites:\n            return jsonify({'success': False, 'error': 'Website not found'}), 404\n        # Trigger check\n        success = check_website(url)\n        return jsonify({\n            'success': True,\n            'url': url,",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "get_webhooks",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def get_webhooks():\n    \"\"\"Get all registered webhooks\"\"\"\n    with webhook_lock:\n        return jsonify({\n            'success': True,\n            'webhooks': list(webhooks.keys()),\n            'count': len(webhooks)\n        })\n@api_bp.route('/webhooks', methods=['POST'])\ndef register_webhook():",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "register_webhook",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def register_webhook():\n    \"\"\"Register a new webhook\"\"\"\n    try:\n        data = request.get_json()\n        webhook_url = data.get('url')\n        webhook_name = data.get('name', f'webhook_{int(time.time())}')\n        events = data.get('events', ['status_change', 'downtime'])\n        if not webhook_url:\n            return jsonify({'success': False, 'error': 'Webhook URL is required'}), 400\n        with webhook_lock:",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "unregister_webhook",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def unregister_webhook(webhook_name):\n    \"\"\"Unregister a webhook\"\"\"\n    try:\n        with webhook_lock:\n            if webhook_name not in webhooks:\n                return jsonify({'success': False, 'error': 'Webhook not found'}), 404\n            del webhooks[webhook_name]\n        return jsonify({\n            'success': True,\n            'message': f'Webhook {webhook_name} unregistered successfully'",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "api_health",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def api_health():\n    \"\"\"API health check endpoint\"\"\"\n    return jsonify({\n        'success': True,\n        'service': 'SiteSentinel API',\n        'version': '2.0.0',\n        'timestamp': datetime.now().isoformat(),\n        'monitored_sites': len(websites),\n        'active_webhooks': len(webhooks)\n    })",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "get_stats",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def get_stats():\n    \"\"\"Get monitoring statistics\"\"\"\n    try:\n        total_sites = len(websites)\n        up_sites = len([url for url, data in websites.items()\n                       if data.get('status') == 'UP'])\n        down_sites = len([url for url, data in websites.items()\n                         if data.get('status') == 'DOWN'])\n        unknown_sites = len(\n            [url for url, data in websites.items() if data.get('status') == 'UNKNOWN'])",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "trigger_webhooks",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def trigger_webhooks(event_type, website_url, website_data):\n    \"\"\"Trigger registered webhooks for specific events\"\"\"\n    import requests\n    with webhook_lock:\n        for webhook_name, webhook_info in webhooks.items():\n            if event_type in webhook_info['events']:\n                try:\n                    payload = {\n                        'event': event_type,\n                        'website': website_url,",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "api_bp",
+        "kind": 5,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "api_bp = Blueprint('api', __name__, url_prefix='/api')\n# Webhook storage and management\nwebhooks = {}\nwebhook_lock = threading.Lock()\n@api_bp.route('/websites', methods=['GET'])\ndef get_all_websites():\n    \"\"\"Get all monitored websites with their status\"\"\"\n    try:\n        website_data = {}\n        for url, data in websites.items():",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "webhooks",
+        "kind": 5,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "webhooks = {}\nwebhook_lock = threading.Lock()\n@api_bp.route('/websites', methods=['GET'])\ndef get_all_websites():\n    \"\"\"Get all monitored websites with their status\"\"\"\n    try:\n        website_data = {}\n        for url, data in websites.items():\n            website_data[url] = {\n                **data,",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "webhook_lock",
+        "kind": 5,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "webhook_lock = threading.Lock()\n@api_bp.route('/websites', methods=['GET'])\ndef get_all_websites():\n    \"\"\"Get all monitored websites with their status\"\"\"\n    try:\n        website_data = {}\n        for url, data in websites.items():\n            website_data[url] = {\n                **data,\n                'health_score': data.get('health_score', {'score': 0, 'grade': 'F'}),",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "load_metadata",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def load_metadata():\n    if os.path.exists(METADATA_FILE):\n        with open(METADATA_FILE, \"r\") as file:\n            return json.load(file)\n    return {}\ndef save_metadata(metadata):\n    with open(METADATA_FILE, \"w\") as file:\n        json.dump(metadata, file, indent=4)\ndef update_metadata(website, screenshot_path):\n    metadata = load_metadata()",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "save_metadata",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def save_metadata(metadata):\n    with open(METADATA_FILE, \"w\") as file:\n        json.dump(metadata, file, indent=4)\ndef update_metadata(website, screenshot_path):\n    metadata = load_metadata()\n    metadata[website] = {\n        \"last_captured\": time.time(),\n        \"screenshot_path\": screenshot_path,\n    }\n    save_metadata(metadata)",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "update_metadata",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def update_metadata(website, screenshot_path):\n    metadata = load_metadata()\n    metadata[website] = {\n        \"last_captured\": time.time(),\n        \"screenshot_path\": screenshot_path,\n    }\n    save_metadata(metadata)\ndef get_website_ip(website_url):\n    \"\"\"Extract domain from URL and get its IP address\"\"\"\n    try:",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "get_website_ip",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def get_website_ip(website_url):\n    \"\"\"Extract domain from URL and get its IP address\"\"\"\n    try:\n        # Extract domain from URL\n        from urllib.parse import urlparse\n        parsed = urlparse(website_url)\n        domain = parsed.netloc or parsed.path.split('/')[0]\n        # Remove www. if present\n        if domain.startswith('www.'):\n            domain = domain[4:]",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "capture_screenshot",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def capture_screenshot(website_url, output_folder=\"static/screenshots\", delay=3):\n    if not os.path.exists(output_folder):\n        os.makedirs(output_folder)\n    metadata = load_metadata()\n    options = {\"headless\": True, \"args\": [\"--no-sandbox\", \"--disable-gpu\"]}\n    with sync_playwright() as p:\n        try:\n            screenshot_filename = (\n                f\"{website_url.replace('https://', '').replace('/', '_')}.png\"\n            )",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "add_screenshot_to_website",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def add_screenshot_to_website(website):\n    global websites\n    try:\n        last_captured = websites[website].get(\"last_captured\")\n        website_ip = websites[website].get(\"ip\")\n        if website_ip == \"IP Not Found\":\n            return\n        if (\n            last_captured is None or (time.time() - last_captured) > 3600\n        ):  # Check if more than an hour has passed",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "load_websites_from_excel",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def load_websites_from_excel(file_path: str = \"\"):\n    global websites\n    try:\n        if not file_path:\n            logging.warning(\"No file path provided for Excel loading\")\n            return {}\n        if not os.path.exists(file_path):\n            logging.warning(f\"Excel file not found: {file_path}\")\n            return {}\n        df = pd.read_excel(file_path)",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "send_email_alert",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def send_email_alert(website):\n    try:\n        with smtplib.SMTP_SSL(EMAIL_SERVER, EMAIL_PORT) as server:\n            server.login(EMAIL_SENDER, EMAIL_PASSWORD)\n            subject = f\"Website Down Alert: {website}\"\n            body = f\"ALERT: The website {website} is down for {\n                ERROR_THRESHOLD} consecutive checks.\"\n            message = f\"Subject: {subject}\\n\\n{body}\"\n            server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, message)\n            logging.info(f\"Email alert sent for {website}\")",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "check_website",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def check_website(url):\n    global websites\n    start_time = time.time()\n    # Resolve IP address if not already done\n    if not websites[url].get(\"ip\") or websites[url][\"ip\"] == \"Unknown\":\n        websites[url][\"ip\"] = get_website_ip(url)\n    for attempt in range(RETRY_COUNT + 1):\n        try:\n            response = requests.get(url, timeout=30)\n            # Convert to milliseconds",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "check_websites",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def check_websites():\n    \"\"\"Check all websites in the global websites dictionary\"\"\"\n    if not websites:\n        logging.info(\"No websites to check\")\n        return\n    logging.info(f\"Starting check for {len(websites)} websites\")\n    threads = []\n    # Create a copy of keys to avoid modification during iteration\n    for website in list(websites.keys()):\n        web_thread = Thread(target=check_website, args=(website,))",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "periodic_monitoring",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def periodic_monitoring(interval=3600):  # 1 hour by default\n    while True:\n        check_websites()\n        time.sleep(interval)",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_SERVER",
+        "kind": 5,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "EMAIL_SERVER = os.getenv(\"EMAIL_SERVER\")\nEMAIL_PORT = os.getenv(\"EMAIL_PORT\")\nEMAIL_SENDER = os.getenv(\"EMAIL_SENDER\")\nEMAIL_PASSWORD = os.getenv(\"EMAIL_PASSWORD\")\nEMAIL_RECEIVER = os.getenv(\"EMAIL_RECEIVER\")\nERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_PORT",
+        "kind": 5,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "EMAIL_PORT = os.getenv(\"EMAIL_PORT\")\nEMAIL_SENDER = os.getenv(\"EMAIL_SENDER\")\nEMAIL_PASSWORD = os.getenv(\"EMAIL_PASSWORD\")\nEMAIL_RECEIVER = os.getenv(\"EMAIL_RECEIVER\")\nERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_SENDER",
+        "kind": 5,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "EMAIL_SENDER = os.getenv(\"EMAIL_SENDER\")\nEMAIL_PASSWORD = os.getenv(\"EMAIL_PASSWORD\")\nEMAIL_RECEIVER = os.getenv(\"EMAIL_RECEIVER\")\nERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_PASSWORD",
+        "kind": 5,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "EMAIL_PASSWORD = os.getenv(\"EMAIL_PASSWORD\")\nEMAIL_RECEIVER = os.getenv(\"EMAIL_RECEIVER\")\nERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "EMAIL_RECEIVER",
+        "kind": 5,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "EMAIL_RECEIVER = os.getenv(\"EMAIL_RECEIVER\")\nERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\ndef load_metadata():",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "ERROR_THRESHOLD",
+        "kind": 5,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "ERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\ndef load_metadata():\n    if os.path.exists(METADATA_FILE):",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "RETRY_COUNT",
+        "kind": 5,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "RETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\ndef load_metadata():\n    if os.path.exists(METADATA_FILE):\n        with open(METADATA_FILE, \"r\") as file:",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "METADATA_FILE",
+        "kind": 5,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "METADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\ndef load_metadata():\n    if os.path.exists(METADATA_FILE):\n        with open(METADATA_FILE, \"r\") as file:\n            return json.load(file)",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "websites",
+        "kind": 5,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "websites = {}\ndef load_metadata():\n    if os.path.exists(METADATA_FILE):\n        with open(METADATA_FILE, \"r\") as file:\n            return json.load(file)\n    return {}\ndef save_metadata(metadata):\n    with open(METADATA_FILE, \"w\") as file:\n        json.dump(metadata, file, indent=4)\ndef update_metadata(website, screenshot_path):",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "DEFAULT_EXCEL_FILE",
+        "kind": 5,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "DEFAULT_EXCEL_FILE = \"websites.xlsx\"\nif os.path.exists(DEFAULT_EXCEL_FILE):\n    load_websites_from_excel(DEFAULT_EXCEL_FILE)\nelse:\n    logging.info(\n        \"No default Excel file found, starting with empty website list\")\ndef send_email_alert(website):\n    try:\n        with smtplib.SMTP_SSL(EMAIL_SERVER, EMAIL_PORT) as server:\n            server.login(EMAIL_SENDER, EMAIL_PASSWORD)",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "get_sorted_websites",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def get_sorted_websites():\n    \"\"\"Get a thread-safe copy of websites data sorted by status\"\"\"\n    with websites_lock:\n        return dict(sorted(websites.items(), key=lambda item: (\n            0 if item[1]['status'] == 'DOWN' else\n            1 if item[1]['status'] == 'SLOW' else 2\n        )))\n@app.route(\"/\")\ndef index():\n    try:",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "index",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def index():\n    try:\n        websites_list = get_sorted_websites()\n        return render_template(\"index.html\",\n                               websites=websites_list,\n                               last_updated=datetime.now().strftime(\"%Y-%m-%d %H:%M:%S\"))\n    except Exception as e:\n        logger.error(f\"Error in index route: {e}\")\n        return f\"An error occurred: {e}\", 500\n@app.route(\"/api/status\")",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "api_status",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_status():\n    \"\"\"API endpoint for real-time status updates\"\"\"\n    try:\n        websites_list = get_sorted_websites()\n        return jsonify({\n            'websites': websites_list,\n            'last_updated': datetime.now().isoformat(),\n            'total_sites': len(websites_list),\n            'down_sites': sum(1 for site in websites_list.values() if site['status'] == 'DOWN')\n        })",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "export_pdf",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def export_pdf():\n    try:\n        websites_list = get_sorted_websites()\n        html = render_template(\"index.html\",\n                               websites=websites_list,\n                               last_updated=datetime.now().strftime(\"%Y-%m-%d %H:%M:%S\"))\n        # Configure pdfkit options with wkhtmltopdf path\n        pdf_config = pdfkit.configuration(wkhtmltopdf=config.WKHTMLTOPDF_PATH)\n        options = {\n            'page-size': 'A4',",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "manage_websites",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def manage_websites():\n    \"\"\"Website management page\"\"\"\n    try:\n        websites_list = get_sorted_websites()\n        return render_template(\"manage.html\", websites=websites_list)\n    except Exception as e:\n        logger.error(f\"Error in manage route: {e}\")\n        return f\"An error occurred: {e}\", 500\n@app.route(\"/add_website\", methods=[\"POST\"])\ndef add_website():",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "add_website",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def add_website():\n    \"\"\"Add a single website manually\"\"\"\n    try:\n        url = request.form.get('url', '').strip()\n        if not url:\n            flash('Please enter a valid URL', 'error')\n            return redirect(url_for('manage_websites'))\n        # Add http:// if no protocol specified\n        if not url.startswith(('http://', 'https://')):\n            url = 'https://' + url",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "remove_website",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def remove_website():\n    \"\"\"Remove a website\"\"\"\n    try:\n        url = request.form.get('url', '').strip()\n        if not url:\n            flash('Invalid URL provided', 'error')\n            return redirect(url_for('manage_websites'))\n        # Remove from websites dictionary with thread safety\n        with websites_lock:\n            if url in websites:",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "upload_websites",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def upload_websites():\n    \"\"\"Upload websites from a file (Excel, CSV, or TXT)\"\"\"\n    try:\n        if 'file' not in request.files:\n            flash('No file uploaded', 'error')\n            return redirect(url_for('manage_websites'))\n        file = request.files['file']\n        if file.filename == '':\n            flash('No file selected', 'error')\n            return redirect(url_for('manage_websites'))",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "check_website_now",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def check_website_now(url):\n    \"\"\"Manually trigger a check for a specific website\"\"\"\n    try:\n        from website_monitor.monitor import check_website\n        # Decode the URL\n        import urllib.parse\n        url = urllib.parse.unquote(url)\n        # Check if website exists in our list\n        with websites_lock:\n            if url not in websites:",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "check_all_websites",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def check_all_websites():\n    \"\"\"Manually trigger a check for all websites\"\"\"\n    try:\n        from website_monitor.monitor import check_websites\n        # Trigger checks for all websites\n        check_websites()\n        return jsonify({\n            'success': True,\n            'message': 'All websites check initiated'\n        })",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "export_websites",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def export_websites():\n    \"\"\"Export current websites list to Excel\"\"\"\n    try:\n        websites_list = get_sorted_websites()\n        # Create DataFrame\n        data = []\n        for url, info in websites_list.items():\n            data.append({\n                'URL': url,\n                'Status': info.get('status', 'UNKNOWN'),",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "not_found",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def not_found(error):\n    return render_template('error.html', error=\"Page not found\"), 404\n@app.errorhandler(500)\ndef internal_error(error):\n    return render_template('error.html', error=\"Internal server error\"), 500\nif __name__ == \"__main__\":\n    app.run(debug=config.DEBUG, host=config.HOST, port=config.PORT)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "internal_error",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def internal_error(error):\n    return render_template('error.html', error=\"Internal server error\"), 500\nif __name__ == \"__main__\":\n    app.run(debug=config.DEBUG, host=config.HOST, port=config.PORT)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "app = Flask(__name__)\napp.secret_key = config.SECRET_KEY\n# Configure logging\nlog_level = getattr(logging, config.LOG_LEVEL.upper(), logging.INFO)\nlogging.basicConfig(\n    level=log_level,\n    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',\n    handlers=[\n        logging.StreamHandler(),\n        *([logging.FileHandler(config.LOG_FILE)] if config.LOG_FILE else [])",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "app.secret_key",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "app.secret_key = config.SECRET_KEY\n# Configure logging\nlog_level = getattr(logging, config.LOG_LEVEL.upper(), logging.INFO)\nlogging.basicConfig(\n    level=log_level,\n    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',\n    handlers=[\n        logging.StreamHandler(),\n        *([logging.FileHandler(config.LOG_FILE)] if config.LOG_FILE else [])\n    ]",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "log_level",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "log_level = getattr(logging, config.LOG_LEVEL.upper(), logging.INFO)\nlogging.basicConfig(\n    level=log_level,\n    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',\n    handlers=[\n        logging.StreamHandler(),\n        *([logging.FileHandler(config.LOG_FILE)] if config.LOG_FILE else [])\n    ]\n)\nlogger = logging.getLogger(__name__)",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "logger = logging.getLogger(__name__)\n# Thread lock for safe access to websites data\nwebsites_lock = threading.Lock()\n# Start the async monitoring in a separate thread\nmonitor_thread = threading.Thread(target=periodic_monitoring, daemon=True)\nmonitor_thread.start()\ndef get_sorted_websites():\n    \"\"\"Get a thread-safe copy of websites data sorted by status\"\"\"\n    with websites_lock:\n        return dict(sorted(websites.items(), key=lambda item: (",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "websites_lock",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "websites_lock = threading.Lock()\n# Start the async monitoring in a separate thread\nmonitor_thread = threading.Thread(target=periodic_monitoring, daemon=True)\nmonitor_thread.start()\ndef get_sorted_websites():\n    \"\"\"Get a thread-safe copy of websites data sorted by status\"\"\"\n    with websites_lock:\n        return dict(sorted(websites.items(), key=lambda item: (\n            0 if item[1]['status'] == 'DOWN' else\n            1 if item[1]['status'] == 'SLOW' else 2",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "monitor_thread",
+        "kind": 5,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "monitor_thread = threading.Thread(target=periodic_monitoring, daemon=True)\nmonitor_thread.start()\ndef get_sorted_websites():\n    \"\"\"Get a thread-safe copy of websites data sorted by status\"\"\"\n    with websites_lock:\n        return dict(sorted(websites.items(), key=lambda item: (\n            0 if item[1]['status'] == 'DOWN' else\n            1 if item[1]['status'] == 'SLOW' else 2\n        )))\n@app.route(\"/\")",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "Config",
+        "kind": 6,
+        "importPath": "config",
+        "description": "config",
+        "peekOfCode": "class Config:\n    \"\"\"Configuration class for Site Sentinel application\"\"\"\n    # Flask settings\n    DEBUG: bool = True\n    HOST: str = '0.0.0.0'\n    PORT: int = 5000\n    SECRET_KEY: str = os.getenv('SECRET_KEY', 'your-secret-key-here')\n    # Monitoring settings\n    CHECK_INTERVAL: int = int(os.getenv('CHECK_INTERVAL', 300))  # 5 minutes\n    ERROR_THRESHOLD: int = int(os.getenv('ERROR_THRESHOLD', 3))",
+        "detail": "config",
+        "documentation": {}
+    },
+    {
+        "label": "config",
+        "kind": 5,
+        "importPath": "config",
+        "description": "config",
+        "peekOfCode": "config = Config()",
+        "detail": "config",
+        "documentation": {}
+    },
+    {
+        "label": "SiteSentinelDB",
+        "kind": 6,
+        "importPath": "database",
+        "description": "database",
+        "peekOfCode": "class SiteSentinelDB:\n    def __init__(self, db_path: str = 'sitesentinel.db'):\n        self.db_path = db_path\n        self.lock = threading.Lock()\n        self.init_database()\n    def init_database(self):\n        \"\"\"Initialize database tables\"\"\"\n        with sqlite3.connect(self.db_path) as conn:\n            cursor = conn.cursor()\n            # Websites table",
+        "detail": "database",
+        "documentation": {}
+    },
+    {
+        "label": "db",
+        "kind": 5,
+        "importPath": "database",
+        "description": "database",
+        "peekOfCode": "db = SiteSentinelDB()",
+        "detail": "database",
+        "documentation": {}
+    },
+    {
+        "label": "SSLMonitor",
+        "kind": 6,
+        "importPath": "ssl_monitor",
+        "description": "ssl_monitor",
+        "peekOfCode": "class SSLMonitor:\n    \"\"\"SSL Certificate monitoring and analysis\"\"\"\n    @staticmethod\n    def check_ssl_certificate(url: str) -> Dict:\n        \"\"\"\n        Check SSL certificate for a given URL\n        Args:\n            url (str): Website URL to check SSL certificate\n        Returns:\n            Dict: SSL certificate information and grading",
+        "detail": "ssl_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "ssl_monitor",
+        "description": "ssl_monitor",
+        "peekOfCode": "logger = logging.getLogger(__name__)\nclass SSLMonitor:\n    \"\"\"SSL Certificate monitoring and analysis\"\"\"\n    @staticmethod\n    def check_ssl_certificate(url: str) -> Dict:\n        \"\"\"\n        Check SSL certificate for a given URL\n        Args:\n            url (str): Website URL to check SSL certificate\n        Returns:",
+        "detail": "ssl_monitor",
+        "documentation": {}
+    }
+]

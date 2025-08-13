@@ -52,10 +52,24 @@ def update_metadata(website, screenshot_path):
 
 
 def get_website_ip(website_url):
+    """Extract domain from URL and get its IP address"""
     try:
-        return socket.gethostbyname(website_url)
-    except (socket.error, socket.gaierror):
-        return "IP Not Found"
+        # Extract domain from URL
+        from urllib.parse import urlparse
+        parsed = urlparse(website_url)
+        domain = parsed.netloc or parsed.path.split('/')[0]
+
+        # Remove www. if present
+        if domain.startswith('www.'):
+            domain = domain[4:]
+
+        return socket.gethostbyname(domain)
+    except (socket.error, socket.gaierror) as e:
+        logging.error(f"Failed to resolve IP for {website_url}: {e}")
+        return "Unknown"
+    except Exception as e:
+        logging.error(f"Unexpected error resolving IP for {website_url}: {e}")
+        return "Unknown"
 
 
 def capture_screenshot(website_url, output_folder="static/screenshots", delay=3):
@@ -85,7 +99,7 @@ def capture_screenshot(website_url, output_folder="static/screenshots", delay=3)
                 logging.info(f"Screenshot already exists for {website_url}")
         except Exception as e:
             logging.error(f"Error capturing screenshot for {website_url}: {e}")
-        finally:            
+        finally:
             return screenshot_filename
 
 
@@ -105,9 +119,17 @@ def add_screenshot_to_website(website):
         logging.error(f"Error adding screenshot for {website}: {e}")
 
 
-def load_websites_from_excel(file_path: str = "website_monitor\\domainler.xlsx"):
+def load_websites_from_excel(file_path: str = ""):
     global websites
     try:
+        if not file_path:
+            logging.warning("No file path provided for Excel loading")
+            return {}
+
+        if not os.path.exists(file_path):
+            logging.warning(f"Excel file not found: {file_path}")
+            return {}
+
         df = pd.read_excel(file_path)
         df["Domain"] = (
             df["Domain"].str.strip().str.lower()
@@ -135,8 +157,13 @@ def load_websites_from_excel(file_path: str = "website_monitor\\domainler.xlsx")
         return {}
 
 
-# Load websites from Excel
-load_websites_from_excel()
+# Load websites from Excel only if file exists
+DEFAULT_EXCEL_FILE = "websites.xlsx"
+if os.path.exists(DEFAULT_EXCEL_FILE):
+    load_websites_from_excel(DEFAULT_EXCEL_FILE)
+else:
+    logging.info(
+        "No default Excel file found, starting with empty website list")
 
 
 def send_email_alert(website):
@@ -155,43 +182,75 @@ def send_email_alert(website):
 
 def check_website(url):
     global websites
-    for _ in range(RETRY_COUNT + 1):
+    start_time = time.time()
+
+    # Resolve IP address if not already done
+    if not websites[url].get("ip") or websites[url]["ip"] == "Unknown":
+        websites[url]["ip"] = get_website_ip(url)
+
+    for attempt in range(RETRY_COUNT + 1):
         try:
-            with requests.get(url, timeout=30) as response:
-                websites[url]["status_code"] = response.status_code
-                if response.status_code == 200:
-                    websites[url]["status"] = "Up"
-                    websites[url]["error_count"] = 0  # Reset error count
-                    logging.info(f"Website is available: {url}")
-                    return True
-                else:
-                    logging.warning(
-                        f"Error: {url} returned status code {
-                            response.status_code}"
-                    )
+            response = requests.get(url, timeout=30)
+            # Convert to milliseconds
+            response_time = round((time.time() - start_time) * 1000, 2)
+
+            websites[url]["status_code"] = response.status_code
+            websites[url]["response_time"] = f"{response_time}ms"
+            websites[url]["last_check"] = time.strftime("%Y-%m-%d %H:%M:%S")
+
+            if response.status_code == 200:
+                websites[url]["status"] = "UP"
+                websites[url]["error_count"] = 0  # Reset error count
+                logging.info(
+                    f"Website is available: {url} ({response_time}ms)")
+                return True
+            else:
+                logging.warning(
+                    f"Error: {url} returned status code {response.status_code}")
+
         except requests.exceptions.ConnectionError as e:
             logging.error(f"Error: {url} is not reachable. Exception: {e}")
+        except requests.exceptions.Timeout as e:
+            logging.error(
+                f"Timeout: {url} took too long to respond. Exception: {e}")
+        except Exception as e:
+            logging.error(f"Unexpected error checking {url}: {e}")
 
-    websites[url]["error_count"] += 1  # Increment error count
+    # If we get here, all attempts failed
+    websites[url]["error_count"] += 1
+    websites[url]["last_check"] = time.strftime("%Y-%m-%d %H:%M:%S")
+
     if websites[url]["error_count"] >= ERROR_THRESHOLD:
-        websites[url]["status"] = "Down"
+        websites[url]["status"] = "DOWN"
+        # send_email_alert(url)  # Uncomment if you want email alerts
     else:
-        websites[url]["status"] = "Error"
-        # send_email_alert(url)
+        websites[url]["status"] = "SLOW"
 
     logging.error(
-        f"{url} has been down for {
-            websites[url]['error_count']} consecutive checks"
-    )
+        f"{url} has been down for {websites[url]['error_count']} consecutive checks")
     return False
 
 
 def check_websites():
+    """Check all websites in the global websites dictionary"""
+    if not websites:
+        logging.info("No websites to check")
+        return
 
-    for website in websites:
+    logging.info(f"Starting check for {len(websites)} websites")
 
+    threads = []
+    # Create a copy of keys to avoid modification during iteration
+    for website in list(websites.keys()):
         web_thread = Thread(target=check_website, args=(website,))
         web_thread.start()
+        threads.append(web_thread)
+
+    # Wait for all threads to complete
+    for thread in threads:
+        thread.join()
+
+    logging.info("Completed checking all websites")
 
 
 def periodic_monitoring(interval=3600):  # 1 hour by default
