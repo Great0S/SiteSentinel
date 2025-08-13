@@ -380,6 +380,12 @@
                                     <i class="fas fa-network-wired mr-1"></i>IP Address
                                 </th>
                                 <th class="px-4 md:px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <i class="fas fa-shield-alt mr-1"></i>SSL Grade
+                                </th>
+                                <th class="px-4 md:px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <i class="fas fa-chart-line mr-1"></i>Health Score
+                                </th>
+                                <th class="px-4 md:px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     <i class="fas fa-exclamation-triangle mr-1"></i>Errors
                                 </th>
                                 <th class="px-4 md:px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -397,7 +403,10 @@
                                     <div class="flex items-center">
                                         <i class="fas fa-globe text-gray-400 mr-2"></i>
                                         <div>
-                                            <span class="text-sm font-medium text-gray-900 break-all max-w-xs">{{ url }}</span>
+                                            <a href="{{ url_for('website_details', url=url) }}" 
+                                               class="text-sm font-medium text-gray-900 hover:text-indigo-600 transition-colors break-all max-w-xs">
+                                                {{ url }}
+                                            </a>
                                             <button onclick="copyToClipboard('{{ url }}')" 
                                                     class="tooltip ml-2 text-gray-400 hover:text-indigo-600 transition-colors text-xs"
                                                     data-tooltip="Copy URL">
@@ -420,6 +429,36 @@
                                 </td>
                                 <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     <span class="font-mono">{{ data.ip or 'Unknown' }}</span>
+                                </td>
+                                <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {% if data.ssl_info and data.ssl_info.grade %}
+                                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium
+                                            {% if data.ssl_info.grade in ['A+', 'A'] %}bg-green-100 text-green-800
+                                            {% elif data.ssl_info.grade in ['B', 'C'] %}bg-yellow-100 text-yellow-800
+                                            {% else %}bg-red-100 text-red-800{% endif %}">
+                                            <i class="fas fa-shield-alt"></i>
+                                            {{ data.ssl_info.grade }}
+                                        </span>
+                                    {% elif url.startswith('https://') %}
+                                        <span class="text-gray-400 text-xs">No SSL</span>
+                                    {% else %}
+                                        <span class="text-gray-400 text-xs">HTTP</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {% if data.health_score %}
+                                        <div class="flex items-center gap-2">
+                                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium
+                                                {% if data.health_score.grade in ['A+', 'A'] %}bg-green-100 text-green-800
+                                                {% elif data.health_score.grade in ['B', 'C'] %}bg-yellow-100 text-yellow-800
+                                                {% else %}bg-red-100 text-red-800{% endif %}">
+                                                {{ data.health_score.grade }}
+                                            </span>
+                                            <span class="text-xs text-gray-500">{{ data.health_score.score }}/100</span>
+                                        </div>
+                                    {% else %}
+                                        <span class="text-gray-400 text-xs">Calculating...</span>
+                                    {% endif %}
                                 </td>
                                 <td class="px-4 md:px-6 py-4 whitespace-nowrap text-sm {% if data.error_count and data.error_count > 0 %}text-red-600 font-semibold{% else %}text-gray-900{% endif %}">
                                     <span class="inline-flex items-center gap-1">

@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ url }} - Website Details - Site Sentinel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --gradient-bg: linear-gradient(135deg,#667eea 0%,#764ba2 100%); 
+            --gradient-bg-dark: linear-gradient(135deg,#0f0f23 0%,#1a1a2e 50%,#16213e 100%);
+            --glass-bg: rgba(255,255,255,0.95);
+            --glass-bg-dark: rgba(15,15,35,0.85);
+            --card-bg: rgba(255,255,255,0.92);
+            --card-bg-dark: rgba(30,41,59,0.85);
+        }
+        
+        * { font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background: var(--gradient-bg); 
+            min-height: 100vh; 
+            transition: all 0.3s ease;
+        }
+        
+        .glass-panel { 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(20px) saturate(1.4); 
+            -webkit-backdrop-filter: blur(20px) saturate(1.4);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card { 
+            background: var(--card-bg); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .status-chip { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+            padding: 0.5rem 1rem; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            border-radius: 9999px; 
+            border: 1px solid; 
+        }
+        
+        .metric-card {
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="glass-panel fixed top-0 left-0 right-0 z-50 border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-4">
+                    <a href="{{ url_for('index') }}" class="text-gray-600 hover:text-indigo-600 transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+                    </a>
+                    <div class="text-gray-300">|</div>
+                    <h1 class="text-lg font-semibold text-gray-800">Website Details</h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="checkWebsiteNow()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-sync-alt mr-2"></i>Check Now
+                    </button>
+                    <a href="{{ url_for('manage_websites') }}" class="text-gray-600 hover:text-indigo-600 transition-colors">
+                        <i class="fas fa-cog"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-20 pb-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto space-y-6">
+            
+            <!-- Website Header -->
+            <div class="glass-card rounded-2xl p-6 shadow-lg">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <div class="p-3 bg-indigo-100 rounded-lg">
+                            <i class="fas fa-globe text-indigo-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-800 break-all">{{ url }}</h1>
+                            <div class="flex items-center gap-3 mt-1">
+                                <span class="status-chip {% if data.status == 'UP' %}bg-emerald-100/80 text-emerald-800 border-emerald-200{% elif data.status == 'DOWN' %}bg-rose-100/80 text-rose-800 border-rose-200{% else %}bg-amber-100/80 text-amber-800 border-amber-200{% endif %}">
+                                    {% if data.status == 'UP' %}
+                                        <i class="fas fa-check-circle"></i>
+                                    {% elif data.status == 'DOWN' %}
+                                        <i class="fas fa-times-circle"></i>
+                                    {% else %}
+                                        <i class="fas fa-question-circle"></i>
+                                    {% endif %}
+                                    {{ data.status }}
+                                </span>
+                                {% if data.last_check %}
+                                <span class="text-sm text-gray-500">
+                                    <i class="far fa-clock mr-1"></i>
+                                    Last checked: {{ data.last_check }}
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="window.open('{{ url }}', '_blank')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-external-link-alt mr-2"></i>Visit Site
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metrics Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Enhanced Health Score -->
+                {% if data.health_score %}
+                <div class="glass-card rounded-xl p-6 metric-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">Health Score</h3>
+                        <i class="fas fa-chart-line text-indigo-500"></i>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl font-bold text-gray-800">{{ data.health_score.score }}</span>
+                            <span class="text-lg text-gray-500">/100</span>
+                        </div>
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-bold
+                            {% if data.health_score.grade in ['A+', 'A'] %}bg-green-100 text-green-800
+                            {% elif data.health_score.grade in ['A-', 'B+', 'B'] %}bg-blue-100 text-blue-800
+                            {% elif data.health_score.grade in ['B-', 'C+', 'C'] %}bg-yellow-100 text-yellow-800
+                            {% else %}bg-red-100 text-red-800{% endif %}">
+                            {{ data.health_score.grade }}
+                        </span>
+                        <p class="text-xs text-gray-500 uppercase">{{ data.health_score.status }}</p>
+                        
+                        {% if data.health_score.confidence %}
+                        <div class="mt-3 pt-3 border-t border-gray-200">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-gray-600">Confidence</span>
+                                <span class="font-medium {% if data.health_score.confidence >= 80 %}text-green-600{% elif data.health_score.confidence >= 60 %}text-yellow-600{% else %}text-red-600{% endif %}">
+                                    {{ data.health_score.confidence }}%
+                                </span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1 mt-1">
+                                <div class="h-1 rounded-full {% if data.health_score.confidence >= 80 %}bg-green-500{% elif data.health_score.confidence >= 60 %}bg-yellow-500{% else %}bg-red-500{% endif %}" 
+                                     style="width: {{ data.health_score.confidence }}%"></div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if data.health_score.analysis %}
+                        <div class="mt-3 pt-3 border-t border-gray-200 space-y-1">
+                            {% if data.health_score.analysis.trend_direction %}
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-gray-600">Trend</span>
+                                <span class="font-medium flex items-center gap-1
+                                    {% if data.health_score.analysis.trend_direction == 'IMPROVING' %}text-green-600
+                                    {% elif data.health_score.analysis.trend_direction == 'DEGRADING' %}text-red-600
+                                    {% else %}text-gray-600{% endif %}">
+                                    {% if data.health_score.analysis.trend_direction == 'IMPROVING' %}
+                                        <i class="fas fa-arrow-up text-xs"></i>
+                                    {% elif data.health_score.analysis.trend_direction == 'DEGRADING' %}
+                                        <i class="fas fa-arrow-down text-xs"></i>
+                                    {% else %}
+                                        <i class="fas fa-arrow-right text-xs"></i>
+                                    {% endif %}
+                                    {{ data.health_score.analysis.trend_direction.replace('_', ' ').title() }}
+                                </span>
+                            </div>
+                            {% endif %}
+                            
+                            {% if data.health_score.analysis.performance_category %}
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-gray-600">Performance</span>
+                                <span class="font-medium 
+                                    {% if data.health_score.analysis.performance_category == 'HIGH_PERFORMANCE' %}text-green-600
+                                    {% elif data.health_score.analysis.performance_category == 'STANDARD' %}text-blue-600
+                                    {% elif data.health_score.analysis.performance_category == 'LOW_PERFORMANCE' %}text-yellow-600
+                                    {% else %}text-red-600{% endif %}">
+                                    {{ data.health_score.analysis.performance_category.replace('_', ' ').title() }}
+                                </span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Response Time -->
+                <div class="glass-card rounded-xl p-6 metric-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">Response Time</h3>
+                        <i class="fas fa-clock text-indigo-500"></i>
+                    </div>
+                    <div class="space-y-2">
+                        <span class="text-3xl font-bold text-gray-800">{{ data.response_time or 'N/A' }}</span>
+                        {% if data.response_time %}
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            {% set response_ms = data.response_time.replace('ms', '')|float if 'ms' in data.response_time else 1000 %}
+                            {% set progress = (response_ms / 10) if (response_ms / 10) < 100 else 100 %}
+                            <div class="h-2 rounded-full {% if response_ms < 500 %}bg-green-500{% elif response_ms < 1000 %}bg-yellow-500{% else %}bg-red-500{% endif %}" 
+                                 style="width: {{ 100 - progress }}%"></div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- SSL Security -->
+                <div class="glass-card rounded-xl p-6 metric-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">SSL Security</h3>
+                        <i class="fas fa-shield-alt text-indigo-500"></i>
+                    </div>
+                    <div class="space-y-2">
+                        {% if data.ssl_info and data.ssl_info.grade %}
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-lg font-bold
+                            {% if data.ssl_info.grade in ['A+', 'A'] %}bg-green-100 text-green-800
+                            {% elif data.ssl_info.grade in ['B', 'C'] %}bg-yellow-100 text-yellow-800
+                            {% else %}bg-red-100 text-red-800{% endif %}">
+                            <i class="fas fa-shield-alt"></i>
+                            {{ data.ssl_info.grade }}
+                        </span>
+                        <p class="text-xs text-gray-500">{{ data.ssl_info.status or 'Valid' }}</p>
+                        {% elif url.startswith('https://') %}
+                        <span class="text-gray-400">No SSL Info</span>
+                        {% else %}
+                        <span class="text-amber-600">HTTP Only</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Error Count -->
+                <div class="glass-card rounded-xl p-6 metric-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">Error Count</h3>
+                        <i class="fas fa-exclamation-triangle text-indigo-500"></i>
+                    </div>
+                    <div class="space-y-2">
+                        <span class="text-3xl font-bold {% if data.error_count and data.error_count > 0 %}text-red-600{% else %}text-gray-800{% endif %}">
+                            {{ data.error_count or 0 }}
+                        </span>
+                        <p class="text-xs text-gray-500">Recent Errors</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Information Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- SSL Certificate Details -->
+                {% if data.ssl_info %}
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="fas fa-certificate text-indigo-500"></i>
+                        SSL Certificate Details
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-600 uppercase tracking-wide font-medium">Grade</p>
+                                <p class="text-lg font-semibold text-gray-800">{{ data.ssl_info.grade or 'N/A' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600 uppercase tracking-wide font-medium">Status</p>
+                                <p class="text-lg font-semibold text-gray-800">{{ data.ssl_info.status or 'Unknown' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600 uppercase tracking-wide font-medium">Issuer</p>
+                                <p class="text-lg font-semibold text-gray-800">{{ data.ssl_info.issuer or 'N/A' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600 uppercase tracking-wide font-medium">Expiry Date</p>
+                                <p class="text-lg font-semibold text-gray-800">{{ data.ssl_info.expiry_date or 'N/A' }}</p>
+                            </div>
+                            {% if data.ssl_info.days_until_expiry %}
+                            <div class="col-span-2">
+                                <p class="text-sm text-gray-600 uppercase tracking-wide font-medium">Days Until Expiry</p>
+                                <p class="text-lg font-semibold {% if data.ssl_info.days_until_expiry < 30 %}text-red-600{% elif data.ssl_info.days_until_expiry < 90 %}text-yellow-600{% else %}text-green-600{% endif %}">
+                                    {{ data.ssl_info.days_until_expiry }} days
+                                </p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Enhanced Health Score Breakdown -->
+                {% if data.health_score and data.health_score.breakdown %}
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="fas fa-chart-pie text-indigo-500"></i>
+                        Health Score Breakdown
+                    </h3>
+                    <div class="space-y-4">
+                        <!-- Core Metrics -->
+                        <div class="mb-4">
+                            <h4 class="text-sm font-medium text-gray-600 mb-3 uppercase tracking-wide">Core Performance</h4>
+                            <div class="space-y-3">
+                                {% if data.health_score.breakdown.response_time is defined %}
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <i class="fas fa-clock text-blue-500 text-xs"></i>
+                                        Response Time
+                                    </span>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-24 bg-gray-200 rounded-full h-2">
+                                            <div class="h-2 rounded-full {% if data.health_score.breakdown.response_time >= 20 %}bg-green-500{% elif data.health_score.breakdown.response_time >= 15 %}bg-yellow-500{% else %}bg-red-500{% endif %}" 
+                                                 style="width: {{ (data.health_score.breakdown.response_time / 30 * 100)|round }}%"></div>
+                                        </div>
+                                        <span class="text-sm font-semibold text-gray-800 min-w-[3rem] text-right">{{ data.health_score.breakdown.response_time|round(1) }}/30</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if data.health_score.breakdown.status_code is defined %}
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <i class="fas fa-server text-green-500 text-xs"></i>
+                                        Status Code
+                                    </span>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-24 bg-gray-200 rounded-full h-2">
+                                            <div class="h-2 rounded-full {% if data.health_score.breakdown.status_code >= 20 %}bg-green-500{% elif data.health_score.breakdown.status_code >= 15 %}bg-yellow-500{% else %}bg-red-500{% endif %}" 
+                                                 style="width: {{ (data.health_score.breakdown.status_code / 20 * 100)|round }}%"></div>
+                                        </div>
+                                        <span class="text-sm font-semibold text-gray-800 min-w-[3rem] text-right">{{ data.health_score.breakdown.status_code|round(1) }}/20</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if data.health_score.breakdown.uptime is defined %}
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <i class="fas fa-heartbeat text-red-500 text-xs"></i>
+                                        Uptime
+                                    </span>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-24 bg-gray-200 rounded-full h-2">
+                                            <div class="h-2 rounded-full {% if data.health_score.breakdown.uptime >= 8 %}bg-green-500{% elif data.health_score.breakdown.uptime >= 6 %}bg-yellow-500{% else %}bg-red-500{% endif %}" 
+                                                 style="width: {{ (data.health_score.breakdown.uptime / 10 * 100)|round }}%"></div>
+                                        </div>
+                                        <span class="text-sm font-semibold text-gray-800 min-w-[3rem] text-right">{{ data.health_score.breakdown.uptime|round(1) }}/10</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Reliability Metrics -->
+                        <div class="mb-4 pt-4 border-t border-gray-200">
+                            <h4 class="text-sm font-medium text-gray-600 mb-3 uppercase tracking-wide">Reliability</h4>
+                            <div class="space-y-3">
+                                {% if data.health_score.breakdown.error_count is defined %}
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <i class="fas fa-exclamation-triangle text-orange-500 text-xs"></i>
+                                        Error Rate
+                                    </span>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-24 bg-gray-200 rounded-full h-2">
+                                            <div class="h-2 rounded-full {% if data.health_score.breakdown.error_count >= 12 %}bg-green-500{% elif data.health_score.breakdown.error_count >= 8 %}bg-yellow-500{% else %}bg-red-500{% endif %}" 
+                                                 style="width: {{ (data.health_score.breakdown.error_count / 15 * 100)|round }}%"></div>
+                                        </div>
+                                        <span class="text-sm font-semibold text-gray-800 min-w-[3rem] text-right">{{ data.health_score.breakdown.error_count|round(1) }}/15</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if data.health_score.breakdown.performance_consistency is defined %}
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <i class="fas fa-chart-line text-purple-500 text-xs"></i>
+                                        Consistency
+                                    </span>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-24 bg-gray-200 rounded-full h-2">
+                                            <div class="h-2 rounded-full {% if data.health_score.breakdown.performance_consistency >= 8 %}bg-green-500{% elif data.health_score.breakdown.performance_consistency >= 6 %}bg-yellow-500{% else %}bg-red-500{% endif %}" 
+                                                 style="width: {{ (data.health_score.breakdown.performance_consistency / 10 * 100)|round }}%"></div>
+                                        </div>
+                                        <span class="text-sm font-semibold text-gray-800 min-w-[3rem] text-right">{{ data.health_score.breakdown.performance_consistency|round(1) }}/10</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if data.health_score.breakdown.performance_trends is defined %}
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <i class="fas fa-trending-up text-indigo-500 text-xs"></i>
+                                        Trends
+                                    </span>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-24 bg-gray-200 rounded-full h-2">
+                                            <div class="h-2 rounded-full {% if data.health_score.breakdown.performance_trends >= 8 %}bg-green-500{% elif data.health_score.breakdown.performance_trends >= 6 %}bg-yellow-500{% else %}bg-red-500{% endif %}" 
+                                                 style="width: {{ (data.health_score.breakdown.performance_trends / 10 * 100)|round }}%"></div>
+                                        </div>
+                                        <span class="text-sm font-semibold text-gray-800 min-w-[3rem] text-right">{{ data.health_score.breakdown.performance_trends|round(1) }}/10</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Security Metrics -->
+                        <div class="pt-4 border-t border-gray-200">
+                            <h4 class="text-sm font-medium text-gray-600 mb-3 uppercase tracking-wide">Security</h4>
+                            <div class="space-y-3">
+                                {% if data.health_score.breakdown.ssl_security is defined %}
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <i class="fas fa-lock text-green-500 text-xs"></i>
+                                        SSL Security
+                                    </span>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-24 bg-gray-200 rounded-full h-2">
+                                            <div class="h-2 rounded-full {% if data.health_score.breakdown.ssl_security >= 12 %}bg-green-500{% elif data.health_score.breakdown.ssl_security >= 8 %}bg-yellow-500{% else %}bg-red-500{% endif %}" 
+                                                 style="width: {{ (data.health_score.breakdown.ssl_security / 15 * 100)|round }}%"></div>
+                                        </div>
+                                        <span class="text-sm font-semibold text-gray-800 min-w-[3rem] text-right">{{ data.health_score.breakdown.ssl_security|round(1) }}/15</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if data.health_score.breakdown.security_comprehensive is defined %}
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                        <i class="fas fa-shield-alt text-blue-500 text-xs"></i>
+                                        Overall Security
+                                    </span>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-24 bg-gray-200 rounded-full h-2">
+                                            <div class="h-2 rounded-full {% if data.health_score.breakdown.security_comprehensive >= 8 %}bg-green-500{% elif data.health_score.breakdown.security_comprehensive >= 6 %}bg-yellow-500{% else %}bg-red-500{% endif %}" 
+                                                 style="width: {{ (data.health_score.breakdown.security_comprehensive / 10 * 100)|round }}%"></div>
+                                        </div>
+                                        <span class="text-sm font-semibold text-gray-800 min-w-[3rem] text-right">{{ data.health_score.breakdown.security_comprehensive|round(1) }}/10</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        {% if data.health_score.analysis and data.health_score.analysis.risk_factors %}
+                        <div class="pt-4 border-t border-gray-200">
+                            <h4 class="text-sm font-medium text-gray-600 mb-3 uppercase tracking-wide">Risk Factors</h4>
+                            <div class="flex flex-wrap gap-2">
+                                {% for risk in data.health_score.analysis.risk_factors %}
+                                <span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full font-medium">
+                                    {{ risk.replace('_', ' ').title() }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Technical Details -->
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="fas fa-server text-indigo-500"></i>
+                        Technical Details
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-600 uppercase tracking-wide font-medium">IP Address</p>
+                                <p class="text-lg font-mono text-gray-800">{{ data.ip or 'Unknown' }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600 uppercase tracking-wide font-medium">Status Code</p>
+                                <p class="text-lg font-semibold text-gray-800">{{ data.status_code or 'N/A' }}</p>
+                            </div>
+                            {% if data.last_error %}
+                            <div class="col-span-2">
+                                <p class="text-sm text-gray-600 uppercase tracking-wide font-medium">Last Error</p>
+                                <p class="text-sm text-red-600 bg-red-50 p-2 rounded">{{ data.last_error }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Recommendations -->
+                {% if recommendations %}
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="fas fa-lightbulb text-indigo-500"></i>
+                        AI-Powered Recommendations
+                    </h3>
+                    
+                    {% for category, category_recommendations in recommendations.items() %}
+                    {% if category_recommendations %}
+                    <div class="mb-6 last:mb-0">
+                        <h4 class="text-md font-medium text-gray-700 mb-3 capitalize flex items-center gap-2">
+                            {% if category == 'priority' %}
+                                <i class="fas fa-exclamation-triangle text-red-500"></i>
+                                <span class="text-red-700">High Priority</span>
+                            {% elif category == 'optimization' %}
+                                <i class="fas fa-rocket text-blue-500"></i>
+                                <span class="text-blue-700">Performance Optimization</span>
+                            {% elif category == 'security' %}
+                                <i class="fas fa-shield-alt text-green-500"></i>
+                                <span class="text-green-700">Security Improvements</span>
+                            {% elif category == 'monitoring' %}
+                                <i class="fas fa-chart-line text-purple-500"></i>
+                                <span class="text-purple-700">Monitoring Enhancements</span>
+                            {% elif category == 'maintenance' %}
+                                <i class="fas fa-tools text-orange-500"></i>
+                                <span class="text-orange-700">Maintenance Tasks</span>
+                            {% endif %}
+                        </h4>
+                        
+                        <div class="space-y-3">
+                            {% for rec in category_recommendations %}
+                            <div class="border-l-4 pl-4 py-3 rounded-r-lg 
+                                {% if rec.impact == 'HIGH' %}border-red-400 bg-red-50
+                                {% elif rec.impact == 'MEDIUM' %}border-yellow-400 bg-yellow-50
+                                {% elif rec.impact == 'POSITIVE' %}border-green-400 bg-green-50
+                                {% else %}border-blue-400 bg-blue-50{% endif %}">
+                                
+                                <div class="flex items-start justify-between gap-4">
+                                    <div class="flex-1">
+                                        <h5 class="font-medium text-gray-800 mb-1">{{ rec.title }}</h5>
+                                        <p class="text-sm text-gray-600 mb-2">{{ rec.description }}</p>
+                                        <p class="text-xs text-gray-500 italic">{{ rec.action }}</p>
+                                    </div>
+                                    
+                                    <div class="flex flex-col gap-1 text-xs">
+                                        <span class="px-2 py-1 rounded text-white font-medium
+                                            {% if rec.impact == 'HIGH' %}bg-red-500
+                                            {% elif rec.impact == 'MEDIUM' %}bg-yellow-500
+                                            {% elif rec.impact == 'LOW' %}bg-blue-500
+                                            {% elif rec.impact == 'POSITIVE' %}bg-green-500
+                                            {% else %}bg-gray-500{% endif %}">
+                                            {{ rec.impact }} Impact
+                                        </span>
+                                        
+                                        {% if rec.effort != 'NONE' %}
+                                        <span class="px-2 py-1 rounded bg-gray-100 text-gray-700 text-center">
+                                            {{ rec.effort }} Effort
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    
+                    {% if not (recommendations.priority or recommendations.optimization or recommendations.security or recommendations.monitoring or recommendations.maintenance) %}
+                    <div class="text-center py-8">
+                        <i class="fas fa-check-circle text-green-500 text-4xl mb-3"></i>
+                        <p class="text-gray-600">No specific recommendations at this time. Your website is performing well!</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkWebsiteNow() {
+            const button = document.querySelector('button[onclick="checkWebsiteNow()"]');
+            const icon = button.querySelector('i');
+            
+            button.disabled = true;
+            icon.classList.add('fa-spin');
+            
+            fetch(`/api/check/{{ url }}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload(); // Refresh to show updated data
+                    } else {
+                        alert('Check failed: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error checking website');
+                })
+                .finally(() => {
+                    button.disabled = false;
+                    icon.classList.remove('fa-spin');
+                });
+        }
+    </script>
+</body>
+</html>

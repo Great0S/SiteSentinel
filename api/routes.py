@@ -26,8 +26,8 @@ def get_all_websites():
             website_data[url] = {
                 **data,
                 'health_score': data.get('health_score', {'score': 0, 'grade': 'F'}),
-                'ssl': data.get('ssl', {}),
-                'dns': data.get('dns', {})
+                'ssl': data.get('ssl_info', {}),
+                'dns': data.get('dns', {'ip': data.get('ip', 'Unknown')})
             }
 
         return jsonify({
@@ -54,8 +54,8 @@ def get_website(url):
             'data': {
                 **data,
                 'health_score': data.get('health_score', {'score': 0, 'grade': 'F'}),
-                'ssl': data.get('ssl', {}),
-                'dns': data.get('dns', {})
+                'ssl': data.get('ssl_info', {}),
+                'dns': data.get('dns', {'ip': data.get('ip', 'Unknown')})
             },
             'timestamp': datetime.now().isoformat()
         })

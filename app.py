@@ -71,6 +71,29 @@ def api_status():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route("/api/check/<path:url>", methods=["POST"])
+def api_check_website(url):
+    """API endpoint to manually check a specific website"""
+    try:
+        with websites_lock:
+            if url not in websites:
+                return jsonify({'success': False, 'error': 'Website not found'}), 404
+
+        # Import and run check
+        from website_monitor.monitor import check_website
+        success = check_website(url)
+
+        return jsonify({
+            'success': True,
+            'checked': True,
+            'result': 'up' if success else 'down',
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        logger.error(f"Error in API check website: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 @app.route("/export_pdf")
 def export_pdf():
     try:
@@ -122,6 +145,45 @@ def manage_websites():
         return f"An error occurred: {e}", 500
 
 
+@app.route("/website/<path:url>")
+def website_details(url):
+    """Detailed website information page"""
+    try:
+        with websites_lock:
+            if url not in websites:
+                flash('Website not found', 'error')
+                return redirect(url_for('index'))
+
+            website_data = websites[url].copy()
+
+        # Get enhanced health recommendations if health score exists
+        recommendations = {}
+        if website_data.get('health_score'):
+            from health_scoring import EnhancedHealthScorer
+            from website_monitor.monitor import get_historical_data
+
+            # Get historical data for enhanced recommendations
+            historical_data = get_historical_data(url)
+
+            # Get enhanced recommendations
+            recommendations = EnhancedHealthScorer.get_health_recommendations(
+                website_data['health_score'],
+                website_data,
+                historical_data
+            )
+
+        return render_template("website_details.html",
+                               url=url,
+                               data=website_data,
+                               recommendations=recommendations)
+    except Exception as e:
+        logger.error(f"Error in website details route: {e}")
+        flash('Error loading website details', 'error')
+        return redirect(url_for('index'))
+        logger.error(f"Error in manage route: {e}")
+        return f"An error occurred: {e}", 500
+
+
 @app.route("/add_website", methods=["POST"])
 def add_website():
     """Add a single website manually"""
@@ -147,8 +209,21 @@ def add_website():
                     'last_check': None,
                     'screenshot': None
                 }
-                flash(f'Website {url} added successfully!', 'success')
                 logger.info(f"Added website: {url}")
+
+                # Perform immediate synchronous check to get initial status
+                from website_monitor.monitor import check_website
+                try:
+                    # This will update the website status immediately
+                    check_website(url)
+                    flash(
+                        f'Website {url} added and checked successfully!', 'success')
+                except Exception as e:
+                    logger.error(
+                        f"Error checking website {url} after adding: {e}")
+                    flash(
+                        f'Website {url} added but initial check failed', 'warning')
+
             else:
                 flash(f'Website {url} already exists!', 'warning')
 

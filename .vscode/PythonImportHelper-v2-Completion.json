@@ -139,6 +139,22 @@
         "documentation": {}
     },
     {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "timedelta",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
         "label": "websites",
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
@@ -193,6 +209,47 @@
         "description": "threading",
         "isExtraImport": true,
         "detail": "threading",
+        "documentation": {}
+    },
+    {
+        "label": "SSLMonitor",
+        "importPath": "ssl_monitor",
+        "description": "ssl_monitor",
+        "isExtraImport": true,
+        "detail": "ssl_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "EnhancedHealthScorer",
+        "importPath": "health_scoring",
+        "description": "health_scoring",
+        "isExtraImport": true,
+        "detail": "health_scoring",
+        "documentation": {}
+    },
+    {
+        "label": "HealthScorer",
+        "importPath": "health_scoring",
+        "description": "health_scoring",
+        "isExtraImport": true,
+        "detail": "health_scoring",
+        "documentation": {}
+    },
+    {
+        "label": "EnhancedHealthScorer",
+        "importPath": "health_scoring",
+        "description": "health_scoring",
+        "isExtraImport": true,
+        "detail": "health_scoring",
+        "documentation": {}
+    },
+    {
+        "label": "requests",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "requests",
+        "description": "requests",
+        "detail": "requests",
         "documentation": {}
     },
     {
@@ -267,12 +324,12 @@
         "documentation": {}
     },
     {
-        "label": "requests",
+        "label": "sys",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "requests",
-        "description": "requests",
-        "detail": "requests",
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
         "documentation": {}
     },
     {
@@ -349,6 +406,38 @@
         "documentation": {}
     },
     {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
         "label": "Optional",
         "importPath": "typing",
         "description": "typing",
@@ -363,6 +452,32 @@
         "importPath": "sqlite3",
         "description": "sqlite3",
         "detail": "sqlite3",
+        "documentation": {}
+    },
+    {
+        "label": "statistics",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "statistics",
+        "description": "statistics",
+        "detail": "statistics",
+        "documentation": {}
+    },
+    {
+        "label": "math",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "math",
+        "description": "math",
+        "detail": "math",
+        "documentation": {}
+    },
+    {
+        "label": "deque",
+        "importPath": "collections",
+        "description": "collections",
+        "isExtraImport": true,
+        "detail": "collections",
         "documentation": {}
     },
     {
@@ -387,7 +502,7 @@
         "kind": 2,
         "importPath": "api.routes",
         "description": "api.routes",
-        "peekOfCode": "def get_all_websites():\n    \"\"\"Get all monitored websites with their status\"\"\"\n    try:\n        website_data = {}\n        for url, data in websites.items():\n            website_data[url] = {\n                **data,\n                'health_score': data.get('health_score', {'score': 0, 'grade': 'F'}),\n                'ssl': data.get('ssl', {}),\n                'dns': data.get('dns', {})",
+        "peekOfCode": "def get_all_websites():\n    \"\"\"Get all monitored websites with their status\"\"\"\n    try:\n        website_data = {}\n        for url, data in websites.items():\n            website_data[url] = {\n                **data,\n                'health_score': data.get('health_score', {'score': 0, 'grade': 'F'}),\n                'ssl': data.get('ssl_info', {}),\n                'dns': data.get('dns', {'ip': data.get('ip', 'Unknown')})",
         "detail": "api.routes",
         "documentation": {}
     },
@@ -509,6 +624,33 @@
         "documentation": {}
     },
     {
+        "label": "get_historical_data",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def get_historical_data(url: str) -> list:\n    \"\"\"Get historical performance data for a website\"\"\"\n    return performance_history.get(url, [])\ndef add_performance_record(url: str, data: dict):\n    \"\"\"Add a performance record to history\"\"\"\n    if url not in performance_history:\n        performance_history[url] = []\n    # Add current record\n    performance_history[url].append({\n        'timestamp': time.time(),",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "add_performance_record",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def add_performance_record(url: str, data: dict):\n    \"\"\"Add a performance record to history\"\"\"\n    if url not in performance_history:\n        performance_history[url] = []\n    # Add current record\n    performance_history[url].append({\n        'timestamp': time.time(),\n        'response_time': data.get('response_time'),\n        'status_code': data.get('status_code'),\n        'status': data.get('status'),",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "calculate_enhanced_health_score",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def calculate_enhanced_health_score(url: str, current_data: dict) -> dict:\n    \"\"\"Calculate enhanced health score with historical context\"\"\"\n    try:\n        # Get historical data\n        historical_data = get_historical_data(url)\n        # Use enhanced health scorer\n        health_data = EnhancedHealthScorer.calculate_health_score(\n            current_data,\n            historical_data\n        )",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
         "label": "load_metadata",
         "kind": 2,
         "importPath": "website_monitor.monitor",
@@ -540,7 +682,7 @@
         "kind": 2,
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
-        "peekOfCode": "def get_website_ip(website_url):\n    \"\"\"Extract domain from URL and get its IP address\"\"\"\n    try:\n        # Extract domain from URL\n        from urllib.parse import urlparse\n        parsed = urlparse(website_url)\n        domain = parsed.netloc or parsed.path.split('/')[0]\n        # Remove www. if present\n        if domain.startswith('www.'):\n            domain = domain[4:]",
+        "peekOfCode": "def get_website_ip(website_url):\n    \"\"\"Extract domain from URL and get its IP address\"\"\"\n    try:\n        # Extract domain from URL\n        from urllib.parse import urlparse\n        parsed = urlparse(website_url)\n        domain = parsed.netloc or parsed.path.split('/')[0]\n        # Remove port if present\n        if ':' in domain and not domain.startswith('['):  # Handle IPv6\n            domain = domain.split(':')[0]",
         "detail": "website_monitor.monitor",
         "documentation": {}
     },
@@ -585,7 +727,7 @@
         "kind": 2,
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
-        "peekOfCode": "def check_website(url):\n    global websites\n    start_time = time.time()\n    # Resolve IP address if not already done\n    if not websites[url].get(\"ip\") or websites[url][\"ip\"] == \"Unknown\":\n        websites[url][\"ip\"] = get_website_ip(url)\n    for attempt in range(RETRY_COUNT + 1):\n        try:\n            response = requests.get(url, timeout=30)\n            # Convert to milliseconds",
+        "peekOfCode": "def check_website(url):\n    global websites\n    start_time = time.time()\n    # Resolve IP address if not already done\n    if not websites[url].get(\"ip\") or websites[url][\"ip\"] == \"Unknown\":\n        websites[url][\"ip\"] = get_website_ip(url)\n    # Check SSL certificate for HTTPS sites\n    ssl_info = None\n    if url.startswith('https://'):\n        try:",
         "detail": "website_monitor.monitor",
         "documentation": {}
     },
@@ -648,7 +790,7 @@
         "kind": 5,
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
-        "peekOfCode": "EMAIL_RECEIVER = os.getenv(\"EMAIL_RECEIVER\")\nERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\ndef load_metadata():",
+        "peekOfCode": "EMAIL_RECEIVER = os.getenv(\"EMAIL_RECEIVER\")\nERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\n# Historical data storage for enhanced health scoring",
         "detail": "website_monitor.monitor",
         "documentation": {}
     },
@@ -657,7 +799,7 @@
         "kind": 5,
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
-        "peekOfCode": "ERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\ndef load_metadata():\n    if os.path.exists(METADATA_FILE):",
+        "peekOfCode": "ERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\n# Historical data storage for enhanced health scoring\nperformance_history = {}",
         "detail": "website_monitor.monitor",
         "documentation": {}
     },
@@ -666,7 +808,7 @@
         "kind": 5,
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
-        "peekOfCode": "RETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\ndef load_metadata():\n    if os.path.exists(METADATA_FILE):\n        with open(METADATA_FILE, \"r\") as file:",
+        "peekOfCode": "RETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\n# Historical data storage for enhanced health scoring\nperformance_history = {}\nMAX_HISTORY_ENTRIES = 50  # Keep last 50 measurements per website",
         "detail": "website_monitor.monitor",
         "documentation": {}
     },
@@ -675,7 +817,7 @@
         "kind": 5,
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
-        "peekOfCode": "METADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\ndef load_metadata():\n    if os.path.exists(METADATA_FILE):\n        with open(METADATA_FILE, \"r\") as file:\n            return json.load(file)",
+        "peekOfCode": "METADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\n# Historical data storage for enhanced health scoring\nperformance_history = {}\nMAX_HISTORY_ENTRIES = 50  # Keep last 50 measurements per website\ndef get_historical_data(url: str) -> list:",
         "detail": "website_monitor.monitor",
         "documentation": {}
     },
@@ -684,7 +826,25 @@
         "kind": 5,
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
-        "peekOfCode": "websites = {}\ndef load_metadata():\n    if os.path.exists(METADATA_FILE):\n        with open(METADATA_FILE, \"r\") as file:\n            return json.load(file)\n    return {}\ndef save_metadata(metadata):\n    with open(METADATA_FILE, \"w\") as file:\n        json.dump(metadata, file, indent=4)\ndef update_metadata(website, screenshot_path):",
+        "peekOfCode": "websites = {}\n# Historical data storage for enhanced health scoring\nperformance_history = {}\nMAX_HISTORY_ENTRIES = 50  # Keep last 50 measurements per website\ndef get_historical_data(url: str) -> list:\n    \"\"\"Get historical performance data for a website\"\"\"\n    return performance_history.get(url, [])\ndef add_performance_record(url: str, data: dict):\n    \"\"\"Add a performance record to history\"\"\"\n    if url not in performance_history:",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "performance_history",
+        "kind": 5,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "performance_history = {}\nMAX_HISTORY_ENTRIES = 50  # Keep last 50 measurements per website\ndef get_historical_data(url: str) -> list:\n    \"\"\"Get historical performance data for a website\"\"\"\n    return performance_history.get(url, [])\ndef add_performance_record(url: str, data: dict):\n    \"\"\"Add a performance record to history\"\"\"\n    if url not in performance_history:\n        performance_history[url] = []\n    # Add current record",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "MAX_HISTORY_ENTRIES",
+        "kind": 5,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "MAX_HISTORY_ENTRIES = 50  # Keep last 50 measurements per website\ndef get_historical_data(url: str) -> list:\n    \"\"\"Get historical performance data for a website\"\"\"\n    return performance_history.get(url, [])\ndef add_performance_record(url: str, data: dict):\n    \"\"\"Add a performance record to history\"\"\"\n    if url not in performance_history:\n        performance_history[url] = []\n    # Add current record\n    performance_history[url].append({",
         "detail": "website_monitor.monitor",
         "documentation": {}
     },
@@ -725,6 +885,15 @@
         "documentation": {}
     },
     {
+        "label": "api_check_website",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def api_check_website(url):\n    \"\"\"API endpoint to manually check a specific website\"\"\"\n    try:\n        with websites_lock:\n            if url not in websites:\n                return jsonify({'success': False, 'error': 'Website not found'}), 404\n        # Import and run check\n        from website_monitor.monitor import check_website\n        success = check_website(url)\n        return jsonify({",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
         "label": "export_pdf",
         "kind": 2,
         "importPath": "app",
@@ -738,7 +907,16 @@
         "kind": 2,
         "importPath": "app",
         "description": "app",
-        "peekOfCode": "def manage_websites():\n    \"\"\"Website management page\"\"\"\n    try:\n        websites_list = get_sorted_websites()\n        return render_template(\"manage.html\", websites=websites_list)\n    except Exception as e:\n        logger.error(f\"Error in manage route: {e}\")\n        return f\"An error occurred: {e}\", 500\n@app.route(\"/add_website\", methods=[\"POST\"])\ndef add_website():",
+        "peekOfCode": "def manage_websites():\n    \"\"\"Website management page\"\"\"\n    try:\n        websites_list = get_sorted_websites()\n        return render_template(\"manage.html\", websites=websites_list)\n    except Exception as e:\n        logger.error(f\"Error in manage route: {e}\")\n        return f\"An error occurred: {e}\", 500\n@app.route(\"/website/<path:url>\")\ndef website_details(url):",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "website_details",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def website_details(url):\n    \"\"\"Detailed website information page\"\"\"\n    try:\n        with websites_lock:\n            if url not in websites:\n                flash('Website not found', 'error')\n                return redirect(url_for('index'))\n            website_data = websites[url].copy()\n        # Get enhanced health recommendations if health score exists\n        recommendations = {}",
         "detail": "app",
         "documentation": {}
     },
@@ -902,6 +1080,42 @@
         "description": "database",
         "peekOfCode": "db = SiteSentinelDB()",
         "detail": "database",
+        "documentation": {}
+    },
+    {
+        "label": "test_individual_components",
+        "kind": 2,
+        "importPath": "debug_health_scoring",
+        "description": "debug_health_scoring",
+        "peekOfCode": "def test_individual_components():\n    \"\"\"Test each component individually\"\"\"\n    scorer = EnhancedHealthScorer()\n    # Perfect test data\n    perfect_data = {\n        'url': 'https://example.com',\n        'status': 'UP',\n        'status_code': 200,\n        'response_time': '150ms',\n        'error_count': 0,",
+        "detail": "debug_health_scoring",
+        "documentation": {}
+    },
+    {
+        "label": "EnhancedHealthScorer",
+        "kind": 6,
+        "importPath": "health_scoring",
+        "description": "health_scoring",
+        "peekOfCode": "class EnhancedHealthScorer:\n    \"\"\"Advanced AI-powered health scoring system for websites\"\"\"\n    # Performance baselines and thresholds\n    RESPONSE_TIME_THRESHOLDS = {\n        'excellent': 200,    # <200ms\n        'good': 500,         # 200-500ms\n        'fair': 1000,        # 500ms-1s\n        'poor': 2000,        # 1-2s\n        'critical': 5000     # >5s\n    }",
+        "detail": "health_scoring",
+        "documentation": {}
+    },
+    {
+        "label": "HealthScorer",
+        "kind": 6,
+        "importPath": "health_scoring",
+        "description": "health_scoring",
+        "peekOfCode": "class HealthScorer(EnhancedHealthScorer):\n    \"\"\"Backward compatibility alias for the enhanced health scorer\"\"\"\n    @staticmethod\n    def calculate_health_score(website_data: Dict) -> Dict:\n        \"\"\"Backward compatible method that calls enhanced version\"\"\"\n        enhanced_scorer = EnhancedHealthScorer()\n        return enhanced_scorer.calculate_health_score(website_data)\n    @staticmethod\n    def get_health_recommendations(health_data: Dict) -> list:\n        \"\"\"Backward compatible recommendations method\"\"\"",
+        "detail": "health_scoring",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "health_scoring",
+        "description": "health_scoring",
+        "peekOfCode": "logger = logging.getLogger(__name__)\nclass EnhancedHealthScorer:\n    \"\"\"Advanced AI-powered health scoring system for websites\"\"\"\n    # Performance baselines and thresholds\n    RESPONSE_TIME_THRESHOLDS = {\n        'excellent': 200,    # <200ms\n        'good': 500,         # 200-500ms\n        'fair': 1000,        # 500ms-1s\n        'poor': 2000,        # 1-2s\n        'critical': 5000     # >5s",
+        "detail": "health_scoring",
         "documentation": {}
     },
     {
