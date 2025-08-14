@@ -128,7 +128,7 @@
             </div>
 
             <!-- Metrics Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                 <!-- Enhanced Health Score -->
                 {% if data.health_score %}
                 <div class="glass-card rounded-xl p-6 metric-card">
@@ -258,6 +258,36 @@
                             {{ data.error_count or 0 }}
                         </span>
                         <p class="text-xs text-gray-500">Recent Errors</p>
+                    </div>
+                </div>
+
+                <!-- DNS Health -->
+                <div class="glass-card rounded-xl p-6 metric-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-gray-600 uppercase tracking-wide">DNS Health</h3>
+                        <i class="fas fa-network-wired text-indigo-500"></i>
+                    </div>
+                    <div class="space-y-2">
+                        {% if data.dns_info %}
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl font-bold text-gray-800">{{ data.dns_info.health_score }}</span>
+                            <span class="text-lg text-gray-500">/100</span>
+                        </div>
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-bold
+                            {% if data.dns_info.status == 'EXCELLENT' %}bg-green-100 text-green-800
+                            {% elif data.dns_info.status == 'GOOD' %}bg-blue-100 text-blue-800
+                            {% elif data.dns_info.status == 'FAIR' %}bg-yellow-100 text-yellow-800
+                            {% elif data.dns_info.status == 'POOR' %}bg-orange-100 text-orange-800
+                            {% else %}bg-red-100 text-red-800{% endif %}">
+                            {{ data.dns_info.status }}
+                        </span>
+                        {% if data.dns_info.resolution_timing and data.dns_info.resolution_timing.statistics %}
+                        <p class="text-xs text-gray-500">{{ data.dns_info.resolution_timing.statistics.avg_time_ms }}ms avg</p>
+                        {% endif %}
+                        {% else %}
+                        <span class="text-3xl font-bold text-gray-400">N/A</span>
+                        <p class="text-xs text-gray-500">No DNS Data</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -467,6 +497,187 @@
                                 </span>
                                 {% endfor %}
                             </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- DNS Configuration Details -->
+                {% if data.dns_info %}
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="fas fa-network-wired text-indigo-500"></i>
+                        DNS Configuration
+                    </h3>
+                    <div class="space-y-6">
+                        <!-- DNS Records -->
+                        <div>
+                            <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center gap-2">
+                                <i class="fas fa-list text-blue-500"></i>
+                                DNS Records
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {% for record_type, record_data in data.dns_info.records.items() %}
+                                <div class="bg-gray-50 rounded-lg p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="font-medium text-gray-700">{{ record_type }}</span>
+                                        {% if record_data.exists %}
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">✓ Found</span>
+                                        {% else %}
+                                        <span class="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">✗ Missing</span>
+                                        {% endif %}
+                                    </div>
+                                    {% if record_data.exists %}
+                                    <p class="text-xs text-gray-600">{{ record_data.count }} record(s)</p>
+                                    {% if record_data.resolution_time_ms %}
+                                    <p class="text-xs text-gray-500">{{ record_data.resolution_time_ms }}ms</p>
+                                    {% endif %}
+                                    {% else %}
+                                    <p class="text-xs text-red-600">{{ record_data.error or 'Not found' }}</p>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- DNS Performance -->
+                        {% if data.dns_info.resolution_timing and data.dns_info.resolution_timing.statistics %}
+                        <div>
+                            <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center gap-2">
+                                <i class="fas fa-tachometer-alt text-green-500"></i>
+                                Resolution Performance
+                            </h4>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-600">Min Time</p>
+                                    <p class="text-lg font-semibold text-gray-800">{{ data.dns_info.resolution_timing.statistics.min_time_ms }}ms</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-600">Avg Time</p>
+                                    <p class="text-lg font-semibold text-gray-800">{{ data.dns_info.resolution_timing.statistics.avg_time_ms }}ms</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-600">Max Time</p>
+                                    <p class="text-lg font-semibold text-gray-800">{{ data.dns_info.resolution_timing.statistics.max_time_ms }}ms</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-600">Success Rate</p>
+                                    <p class="text-lg font-semibold {% if data.dns_info.resolution_timing.statistics.success_rate >= 90 %}text-green-600{% elif data.dns_info.resolution_timing.statistics.success_rate >= 70 %}text-yellow-600{% else %}text-red-600{% endif %}">
+                                        {{ data.dns_info.resolution_timing.statistics.success_rate }}%
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- DNS Security -->
+                        {% if data.dns_info.security %}
+                        <div>
+                            <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center gap-2">
+                                <i class="fas fa-shield-alt text-purple-500"></i>
+                                Security Configuration
+                            </h4>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {% if data.dns_info.security.dnssec %}
+                                <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                    <div class="flex items-center justify-center mb-2">
+                                        {% if data.dns_info.security.dnssec.enabled %}
+                                        <i class="fas fa-check-circle text-green-500 text-lg"></i>
+                                        {% else %}
+                                        <i class="fas fa-times-circle text-red-500 text-lg"></i>
+                                        {% endif %}
+                                    </div>
+                                    <p class="font-medium text-gray-700">DNSSEC</p>
+                                    <p class="text-xs text-gray-600">{{ data.dns_info.security.dnssec.status }}</p>
+                                </div>
+                                {% endif %}
+                                
+                                {% if data.dns_info.security.caa %}
+                                <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                    <div class="flex items-center justify-center mb-2">
+                                        {% if data.dns_info.security.caa.configured %}
+                                        <i class="fas fa-check-circle text-green-500 text-lg"></i>
+                                        {% else %}
+                                        <i class="fas fa-times-circle text-red-500 text-lg"></i>
+                                        {% endif %}
+                                    </div>
+                                    <p class="font-medium text-gray-700">CAA</p>
+                                    <p class="text-xs text-gray-600">{{ data.dns_info.security.caa.status }}</p>
+                                </div>
+                                {% endif %}
+                                
+                                {% if data.dns_info.security.spf %}
+                                <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                    <div class="flex items-center justify-center mb-2">
+                                        {% if data.dns_info.security.spf.configured %}
+                                        <i class="fas fa-check-circle text-green-500 text-lg"></i>
+                                        {% else %}
+                                        <i class="fas fa-times-circle text-red-500 text-lg"></i>
+                                        {% endif %}
+                                    </div>
+                                    <p class="font-medium text-gray-700">SPF</p>
+                                    <p class="text-xs text-gray-600">{{ data.dns_info.security.spf.status }}</p>
+                                </div>
+                                {% endif %}
+                                
+                                {% if data.dns_info.security.dmarc %}
+                                <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                    <div class="flex items-center justify-center mb-2">
+                                        {% if data.dns_info.security.dmarc.configured %}
+                                        <i class="fas fa-check-circle text-green-500 text-lg"></i>
+                                        {% else %}
+                                        <i class="fas fa-times-circle text-red-500 text-lg"></i>
+                                        {% endif %}
+                                    </div>
+                                    <p class="font-medium text-gray-700">DMARC</p>
+                                    <p class="text-xs text-gray-600">{{ data.dns_info.security.dmarc.status }}</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- DNS Issues & Recommendations -->
+                        {% if data.dns_info.issues or data.dns_info.recommendations %}
+                        <div>
+                            <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center gap-2">
+                                <i class="fas fa-exclamation-triangle text-orange-500"></i>
+                                Issues & Recommendations
+                            </h4>
+                            {% if data.dns_info.issues %}
+                            <div class="mb-3">
+                                <p class="text-sm font-medium text-red-700 mb-2">Issues Found:</p>
+                                <div class="space-y-1">
+                                    {% for issue in data.dns_info.issues %}
+                                    <div class="flex items-center gap-2 text-sm text-red-600">
+                                        <i class="fas fa-times text-xs"></i>
+                                        {{ issue }}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if data.dns_info.recommendations %}
+                            <div>
+                                <p class="text-sm font-medium text-blue-700 mb-2">Recommendations:</p>
+                                <div class="space-y-2">
+                                    {% for rec in data.dns_info.recommendations %}
+                                    <div class="bg-blue-50 border-l-4 border-blue-400 p-3 rounded-r">
+                                        <div class="flex items-center justify-between mb-1">
+                                            <h6 class="font-medium text-blue-800">{{ rec.title }}</h6>
+                                            <span class="px-2 py-1 bg-blue-200 text-blue-800 text-xs rounded-full">{{ rec.priority }}</span>
+                                        </div>
+                                        <p class="text-sm text-blue-700">{{ rec.description }}</p>
+                                        {% if rec.details %}
+                                        <p class="text-xs text-blue-600 mt-1 italic">{{ rec.details }}</p>
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                         {% endif %}
                     </div>

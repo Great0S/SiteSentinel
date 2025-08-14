@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Site Sentinel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-bg-dark: linear-gradient(135deg,#0f0f23 0%,#1a1a2e 50%,#16213e 100%);
+            --glass-bg: rgba(255,255,255,0.95);
+            --glass-bg-dark: rgba(15,15,35,0.85);
+            --card-bg: rgba(255,255,255,0.92);
+            --card-bg-dark: rgba(30,41,59,0.85);
+        }
+        
+        * { font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background: var(--gradient-bg); 
+            min-height: 100vh; 
+            transition: all 0.3s ease;
+        }
+        
+        .glass-panel { 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(20px) saturate(1.4); 
+            -webkit-backdrop-filter: blur(20px) saturate(1.4);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card { 
+            background: var(--card-bg); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: all 0.3s ease;
+        }
+
+        /* Dark theme styles */
+        body.dark {
+            background: var(--gradient-bg-dark);
+            color: #e2e8f0;
+        }
+
+        body.dark .glass-panel {
+            background: var(--glass-bg-dark);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        body.dark .glass-card {
+            background: var(--card-bg-dark);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+        }
+
+        body.dark .text-gray-700 { color: #cbd5e1; }
+        body.dark .text-gray-600 { color: #94a3b8; }
+        body.dark .text-gray-500 { color: #64748b; }
+        body.dark .bg-gray-50 { background-color: rgba(15, 23, 42, 0.5); }
+        body.dark .border-gray-200 { border-color: rgba(59, 130, 246, 0.2); }
+        
+        .setting-section {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+        }
+
+        .setting-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        body.dark .setting-section {
+            border-bottom-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <div class="glass-panel border-b border-white/10 mb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-2xl font-bold text-gray-800 dark:text-white">
+                        <i class="fas fa-shield-alt text-blue-600 mr-2"></i>
+                        Site Sentinel
+                    </a>
+                    <span class="text-gray-500 dark:text-gray-400">Settings</span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <a href="/" class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
+                        <i class="fas fa-home"></i>
+                        <span class="hidden sm:inline">Dashboard</span>
+                    </a>
+                    <a href="/manage" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
+                        <i class="fas fa-cog"></i>
+                        <span class="hidden sm:inline">Manage</span>
+                    </a>
+                    <a href="/alerts" class="bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
+                        <i class="fas fa-bell"></i>
+                        <span class="hidden sm:inline">Alerts</span>
+                    </a>
+                    <button onclick="toggleTheme()" class="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
+                        <i class="fas fa-moon" id="theme-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Title -->
+        <div class="glass-card rounded-xl shadow-xl p-6 mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">
+                <i class="fas fa-cogs text-blue-600 mr-3"></i>
+                System Settings
+            </h1>
+            <p class="text-gray-600 dark:text-gray-400">Configure monitoring intervals, notification preferences, and system behavior.</p>
+        </div>
+
+        <!-- Settings Form -->
+        <div class="glass-card rounded-xl shadow-xl p-6">
+            <form id="settingsForm" method="POST" action="/settings">
+                
+                <!-- Monitoring Settings -->
+                <div class="setting-section">
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+                        <i class="fas fa-clock text-blue-600 mr-2"></i>
+                        Monitoring Settings
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Check Interval (seconds)
+                            </label>
+                            <input type="number" name="check_interval" 
+                                   value="{{ settings.get('check_interval', '3600') }}"
+                                   min="60" max="86400" 
+                                   class="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">How often to check all websites (60-86400 seconds)</p>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Request Timeout (seconds)
+                            </label>
+                            <input type="number" name="request_timeout" 
+                                   value="{{ settings.get('request_timeout', '30') }}"
+                                   min="5" max="300" 
+                                   class="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Timeout for individual website checks</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Retry Attempts
+                            </label>
+                            <input type="number" name="retry_attempts" 
+                                   value="{{ settings.get('retry_attempts', '3') }}"
+                                   min="1" max="10" 
+                                   class="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Number of retry attempts before marking as down</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Error Threshold
+                            </label>
+                            <input type="number" name="error_threshold" 
+                                   value="{{ settings.get('error_threshold', '3') }}"
+                                   min="1" max="20" 
+                                   class="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Consecutive failures before triggering alerts</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Database Settings -->
+                <div class="setting-section">
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+                        <i class="fas fa-database text-green-600 mr-2"></i>
+                        Database Settings
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                History Retention (days)
+                            </label>
+                            <input type="number" name="history_retention" 
+                                   value="{{ settings.get('history_retention', '30') }}"
+                                   min="1" max="365" 
+                                   class="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">How long to keep monitoring history</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Auto Cleanup
+                            </label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" name="auto_cleanup" 
+                                       {% if settings.get('auto_cleanup', 'true') == 'true' %}checked{% endif %}>
+                                <span class="slider"></span>
+                            </label>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Automatically remove old monitoring records</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Settings -->
+                <div class="setting-section">
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+                        <i class="fas fa-tachometer-alt text-purple-600 mr-2"></i>
+                        Performance Settings
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Max Concurrent Checks
+                            </label>
+                            <input type="number" name="max_concurrent_checks" 
+                                   value="{{ settings.get('max_concurrent_checks', '10') }}"
+                                   min="1" max="50" 
+                                   class="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Maximum websites to check simultaneously</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Enable Screenshots
+                            </label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" name="enable_screenshots" 
+                                       {% if settings.get('enable_screenshots', 'false') == 'true' %}checked{% endif %}>
+                                <span class="slider"></span>
+                            </label>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Capture website screenshots during checks</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notification Settings -->
+                <div class="setting-section">
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+                        <i class="fas fa-bell text-red-600 mr-2"></i>
+                        Notification Settings
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Enable Email Notifications
+                            </label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" name="enable_email_notifications" 
+                                       {% if settings.get('enable_email_notifications', 'false') == 'true' %}checked{% endif %}>
+                                <span class="slider"></span>
+                            </label>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Send email alerts for website issues</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Notification Email
+                            </label>
+                            <input type="email" name="notification_email" 
+                                   value="{{ settings.get('notification_email', '') }}"
+                                   placeholder="admin@example.com"
+                                   class="w-full px-3 py-2 border border-gray-200 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Email address for notifications</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="flex justify-end space-x-4 pt-6">
+                    <button type="button" onclick="resetSettings()" 
+                            class="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                        Reset to Defaults
+                    </button>
+                    <button type="submit" 
+                            class="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-md transition-all duration-200 shadow-md hover:shadow-lg">
+                        <i class="fas fa-save mr-2"></i>
+                        Save Settings
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Current Settings Display -->
+        <div class="glass-card rounded-xl shadow-xl p-6 mt-8">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+                <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+                Current Configuration
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for key, value in settings.items() %}
+                <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
+                    <div class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ key.replace('_', ' ').title() }}</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ value }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="flash-messages" class="fixed top-4 right-4 z-50 space-y-2">
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }} bg-white dark:bg-gray-800 border-l-4 
+                    {% if category == 'success' %}border-green-500 text-green-700 dark:text-green-400{% endif %}
+                    {% if category == 'error' %}border-red-500 text-red-700 dark:text-red-400{% endif %}
+                    {% if category == 'warning' %}border-yellow-500 text-yellow-700 dark:text-yellow-400{% endif %}
+                    p-4 rounded-lg shadow-lg max-w-sm">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            {% if category == 'success' %}<i class="fas fa-check-circle"></i>{% endif %}
+                            {% if category == 'error' %}<i class="fas fa-exclamation-circle"></i>{% endif %}
+                            {% if category == 'warning' %}<i class="fas fa-exclamation-triangle"></i>{% endif %}
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium">{{ message }}</p>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" class="ml-auto text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <script>
+        // Theme Management
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (body.classList.contains('dark')) {
+                body.classList.remove('dark');
+                themeIcon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark');
+                themeIcon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const themeIcon = document.getElementById('theme-icon');
+            
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.body.classList.add('dark');
+                themeIcon.className = 'fas fa-sun';
+            } else {
+                themeIcon.className = 'fas fa-moon';
+            }
+        }
+
+        // Reset settings to defaults
+        function resetSettings() {
+            if (confirm('Are you sure you want to reset all settings to their default values?')) {
+                const form = document.getElementById('settingsForm');
+                
+                // Reset to default values
+                form.check_interval.value = '3600';
+                form.request_timeout.value = '30';
+                form.retry_attempts.value = '3';
+                form.error_threshold.value = '3';
+                form.history_retention.value = '30';
+                form.auto_cleanup.checked = true;
+                form.max_concurrent_checks.value = '10';
+                form.enable_screenshots.checked = false;
+                form.enable_email_notifications.checked = false;
+                form.notification_email.value = '';
+            }
+        }
+
+        // Auto-hide flash messages
+        setTimeout(() => {
+            const flashMessages = document.getElementById('flash-messages');
+            if (flashMessages) {
+                flashMessages.style.opacity = '0';
+                setTimeout(() => flashMessages.remove(), 300);
+            }
+        }, 5000);
+
+        // Load theme on page load
+        loadTheme();
+    </script>
+</body>
+</html>

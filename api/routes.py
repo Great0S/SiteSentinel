@@ -1,13 +1,20 @@
 """
 SiteSentinel API Module
-Provides REST API endpoints for monitoring and webhook functionality
+Provides REST API endpoints for monitoring, webhook functionality, and alert management
 """
 
 from flask import Blueprint, jsonify, request
 import json
 import time
+import asyncio
 from datetime import datetime
-from website_monitor.monitor import websites, check_website, calculate_health_score
+from website_monitor.monitor import (
+    websites,
+    check_websites,
+    check_website,
+    calculate_health_score
+)
+from alert_system import alert_manager, AlertMessage, AlertSeverity, AlertType
 import threading
 
 api_bp = Blueprint('api', __name__, url_prefix='/api')
@@ -291,3 +298,370 @@ def trigger_webhooks(event_type, website_url, website_data):
 
                 except Exception as e:
                     print(f"Error triggering webhook {webhook_name}: {e}")
+
+
+# Alert Management API Endpoints
+
+@api_bp.route('/alerts/channels', methods=['GET'])
+def get_alert_channels():
+    """Get status of all alert channels"""
+    try:
+        return jsonify({
+            'success': True,
+            'channels': alert_manager.get_channel_status(),
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@api_bp.route('/alerts/history', methods=['GET'])
+def get_alert_history():
+    """Get recent alert history"""
+    try:
+        limit = request.args.get('limit', 50, type=int)
+        recent_alerts = alert_manager.get_recent_alerts(limit)
+
+        return jsonify({
+            'success': True,
+            'count': len(recent_alerts),
+            'alerts': recent_alerts,
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@api_bp.route('/alerts/test', methods=['POST'])
+def send_test_alert():
+    """Send a test alert through all configured channels"""
+    try:
+        data = request.get_json()
+
+        # Create test alert
+        test_alert = AlertMessage(
+            title=data.get('title', 'SiteSentinel Test Alert'),
+            message=data.get(
+                'message', 'This is a test alert to verify your notification channels are working correctly.'),
+            severity=AlertSeverity(data.get('severity', 'LOW')),
+            alert_type=AlertType.ERROR_THRESHOLD,
+            website_url=data.get('website_url', 'https://example.com'),
+            timestamp=datetime.now(),
+            details={
+                'test_alert': True,
+                'sent_by': 'API',
+                'test_time': datetime.now().isoformat()
+            }
+        )
+
+        # Send alert asynchronously
+        async def send_alert():
+            return await alert_manager.send_alert(test_alert)
+
+        # Run async function
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+
+        results = loop.run_until_complete(send_alert())
+
+        return jsonify({
+            'success': True,
+            'message': 'Test alert sent',
+            'results': results,
+            'timestamp': datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@api_bp.route('/alerts/channels/<channel_name>/toggle', methods=['POST'])
+def toggle_alert_channel(channel_name):
+    """Enable or disable a specific alert channel"""
+    try:
+        data = request.get_json()
+        enabled = data.get('enabled', True)
+
+        # Find and toggle the channel
+        channel_found = False
+        for channel in alert_manager.channels:
+            if channel.name.lower() == channel_name.lower():
+                channel.enabled = enabled
+                channel_found = True
+                break
+
+        if not channel_found:
+            return jsonify({'success': False, 'error': 'Channel not found'}), 404
+
+        return jsonify({
+            'success': True,
+            'message': f'Channel {channel_name} {"enabled" if enabled else "disabled"}',
+            'channel': channel_name,
+            'enabled': enabled,
+            'timestamp': datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@api_bp.route('/alerts/website/<path:website_url>', methods=['POST'])
+def send_website_alert(website_url):
+    """Send a custom alert for a specific website"""
+    try:
+        data = request.get_json()
+
+        # Validate required fields
+        if not data.get('title') or not data.get('message'):
+            return jsonify({'success': False, 'error': 'Title and message are required'}), 400
+
+        # Create custom alert
+        custom_alert = AlertMessage(
+            title=data['title'],
+            message=data['message'],
+            severity=AlertSeverity(data.get('severity', 'MEDIUM')),
+            alert_type=AlertType(data.get('alert_type', 'ERROR_THRESHOLD')),
+            website_url=website_url,
+            timestamp=datetime.now(),
+            details=data.get('details', {})
+        )
+
+        # Send alert asynchronously
+        async def send_alert():
+            return await alert_manager.send_alert(custom_alert)
+
+        # Run async function
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+
+        results = loop.run_until_complete(send_alert())
+
+        return jsonify({
+            'success': True,
+            'message': 'Custom alert sent',
+            'website': website_url,
+            'results': results,
+            'timestamp': datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@api_bp.route('/alerts/config', methods=['GET'])
+def get_alert_config():
+    """Get current alert configuration"""
+    try:
+        import os
+
+        config = {
+            'slack': {
+                'configured': bool(os.getenv('SLACK_WEBHOOK_URL')),
+                'channel': os.getenv('SLACK_CHANNEL', 'Default')
+            },
+            'discord': {
+                'configured': bool(os.getenv('DISCORD_WEBHOOK_URL'))
+            },
+            'email': {
+                'configured': bool(os.getenv('SMTP_SERVER') and os.getenv('SENDER_EMAIL')),
+                'server': os.getenv('SMTP_SERVER', 'Not configured'),
+                'sender': os.getenv('SENDER_EMAIL', 'Not configured')
+            },
+            'sms': {
+                'configured': bool(os.getenv('TWILIO_ACCOUNT_SID'))
+            },
+            'teams': {
+                'configured': bool(os.getenv('TEAMS_WEBHOOK_URL'))
+            },
+            'telegram': {
+                'configured': bool(os.getenv('TELEGRAM_BOT_TOKEN'))
+            }
+        }
+
+        return jsonify({
+            'success': True,
+            'configuration': config,
+            'active_channels': len(alert_manager.channels),
+            'timestamp': datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@api_bp.route('/alerts/config/slack', methods=['POST'])
+def save_slack_config():
+    """Save Slack configuration"""
+    try:
+        data = request.json
+        webhook_url = data.get('webhook_url')
+        channel = data.get('channel', '#alerts')
+
+        if not webhook_url:
+            return jsonify({'success': False, 'error': 'Webhook URL is required'}), 400
+
+        # Update environment variables (in production, you'd want to update actual config files)
+        import os
+        os.environ['SLACK_WEBHOOK_URL'] = webhook_url
+        os.environ['SLACK_CHANNEL'] = channel
+
+        # Reinitialize alert manager to pick up new config
+        alert_manager.initialize_channels()
+
+        return jsonify({
+            'success': True,
+            'message': 'Slack configuration saved successfully',
+            'timestamp': datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@api_bp.route('/alerts/config/discord', methods=['POST'])
+def save_discord_config():
+    """Save Discord configuration"""
+    try:
+        data = request.json
+        webhook_url = data.get('webhook_url')
+        username = data.get('username', 'SiteSentinel Bot')
+
+        if not webhook_url:
+            return jsonify({'success': False, 'error': 'Webhook URL is required'}), 400
+
+        import os
+        os.environ['DISCORD_WEBHOOK_URL'] = webhook_url
+        os.environ['DISCORD_USERNAME'] = username
+
+        alert_manager.initialize_channels()
+
+        return jsonify({
+            'success': True,
+            'message': 'Discord configuration saved successfully',
+            'timestamp': datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@api_bp.route('/alerts/config/email', methods=['POST'])
+def save_email_config():
+    """Save Email configuration"""
+    try:
+        data = request.json
+        server = data.get('server')
+        port = data.get('port')
+        sender = data.get('sender')
+        password = data.get('password')
+        recipient = data.get('recipient')
+
+        if not all([server, port, sender, password, recipient]):
+            return jsonify({'success': False, 'error': 'All email fields are required'}), 400
+
+        import os
+        os.environ['SMTP_SERVER'] = server
+        os.environ['SMTP_PORT'] = str(port)
+        os.environ['SENDER_EMAIL'] = sender
+        os.environ['SENDER_PASSWORD'] = password
+        os.environ['RECIPIENT_EMAIL'] = recipient
+
+        alert_manager.initialize_channels()
+
+        return jsonify({
+            'success': True,
+            'message': 'Email configuration saved successfully',
+            'timestamp': datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@api_bp.route('/alerts/config/sms', methods=['POST'])
+def save_sms_config():
+    """Save SMS configuration"""
+    try:
+        data = request.json
+        account_sid = data.get('account_sid')
+        auth_token = data.get('auth_token')
+        from_number = data.get('from_number')
+        to_number = data.get('to_number')
+
+        if not all([account_sid, auth_token, from_number, to_number]):
+            return jsonify({'success': False, 'error': 'All SMS fields are required'}), 400
+
+        import os
+        os.environ['TWILIO_ACCOUNT_SID'] = account_sid
+        os.environ['TWILIO_AUTH_TOKEN'] = auth_token
+        os.environ['TWILIO_FROM_NUMBER'] = from_number
+        os.environ['TWILIO_TO_NUMBER'] = to_number
+
+        alert_manager.initialize_channels()
+
+        return jsonify({
+            'success': True,
+            'message': 'SMS configuration saved successfully',
+            'timestamp': datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@api_bp.route('/alerts/config/teams', methods=['POST'])
+def save_teams_config():
+    """Save Teams configuration"""
+    try:
+        data = request.json
+        webhook_url = data.get('webhook_url')
+
+        if not webhook_url:
+            return jsonify({'success': False, 'error': 'Webhook URL is required'}), 400
+
+        import os
+        os.environ['TEAMS_WEBHOOK_URL'] = webhook_url
+
+        alert_manager.initialize_channels()
+
+        return jsonify({
+            'success': True,
+            'message': 'Teams configuration saved successfully',
+            'timestamp': datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@api_bp.route('/alerts/config/telegram', methods=['POST'])
+def save_telegram_config():
+    """Save Telegram configuration"""
+    try:
+        data = request.json
+        bot_token = data.get('bot_token')
+        chat_id = data.get('chat_id')
+
+        if not all([bot_token, chat_id]):
+            return jsonify({'success': False, 'error': 'Bot token and chat ID are required'}), 400
+
+        import os
+        os.environ['TELEGRAM_BOT_TOKEN'] = bot_token
+        os.environ['TELEGRAM_CHAT_ID'] = chat_id
+
+        alert_manager.initialize_channels()
+
+        return jsonify({
+            'success': True,
+            'message': 'Telegram configuration saved successfully',
+            'timestamp': datetime.now().isoformat()
+        })
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500

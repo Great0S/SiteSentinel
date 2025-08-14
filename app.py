@@ -10,9 +10,14 @@ import pandas as pd
 from werkzeug.utils import secure_filename
 from config import config
 from website_monitor.monitor import periodic_monitoring, websites
+from database import db
+from api.routes import api_bp
 
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
+
+# Register API blueprint
+app.register_blueprint(api_bp)
 
 # Configure logging
 log_level = getattr(logging, config.LOG_LEVEL.upper(), logging.INFO)
@@ -200,7 +205,7 @@ def add_website():
         # Add to websites dictionary with thread safety
         with websites_lock:
             if url not in websites:
-                websites[url] = {
+                website_data = {
                     'status': 'UNKNOWN',
                     'ip': None,
                     'status_code': None,
@@ -209,6 +214,18 @@ def add_website():
                     'last_check': None,
                     'screenshot': None
                 }
+                websites[url] = website_data
+
+                # Add to database
+                try:
+                    db.add_website(url, website_data)
+                    logger.info(f"Added website to database: {url}")
+                except Exception as e:
+                    # Website might already exist in DB, update instead
+                    logger.info(
+                        f"Website {url} may already exist in DB, updating: {e}")
+                    db.update_website(url, website_data)
+
                 logger.info(f"Added website: {url}")
 
                 # Perform immediate synchronous check to get initial status
@@ -247,6 +264,14 @@ def remove_website():
         with websites_lock:
             if url in websites:
                 del websites[url]
+
+                # Remove from database
+                try:
+                    db.remove_website(url)
+                    logger.info(f"Removed website from database: {url}")
+                except Exception as e:
+                    logger.error(f"Error removing website from database: {e}")
+
                 flash(f'Website {url} removed successfully!', 'success')
                 logger.info(f"Removed website: {url}")
             else:
@@ -488,6 +513,116 @@ def export_websites():
         logger.error(f"Error exporting websites: {e}")
         flash('Failed to export websites list', 'error')
         return redirect(url_for('manage_websites'))
+
+
+@app.route("/alerts")
+def alerts_management():
+    """Alert management page"""
+    try:
+        return render_template("alerts.html")
+    except Exception as e:
+        logger.error(f"Error in alerts route: {e}")
+        return f"An error occurred: {e}", 500
+
+
+@app.route("/settings")
+def settings_page():
+    """Settings page"""
+    try:
+        # Get all current settings from database
+        settings = db.get_all_settings()
+
+        # Set default values if not in database
+        default_settings = {
+            'check_interval': '3600',
+            'request_timeout': '30',
+            'retry_attempts': '3',
+            'error_threshold': '3',
+            'history_retention': '30',
+            'auto_cleanup': 'true',
+            'max_concurrent_checks': '10',
+            'enable_screenshots': 'false',
+            'enable_email_notifications': 'false',
+            'notification_email': ''
+        }
+
+        # Merge defaults with current settings
+        for key, default_value in default_settings.items():
+            if key not in settings:
+                settings[key] = default_value
+
+        return render_template("settings.html", settings=settings)
+    except Exception as e:
+        logger.error(f"Error in settings route: {e}")
+        return f"An error occurred: {e}", 500
+
+
+@app.route("/settings", methods=["POST"])
+def update_settings():
+    """Update system settings"""
+    try:
+        # Get form data
+        form_data = request.form.to_dict()
+
+        # Handle checkboxes (they don't appear in form data if unchecked)
+        checkbox_fields = ['auto_cleanup',
+                           'enable_screenshots', 'enable_email_notifications']
+        for field in checkbox_fields:
+            if field not in form_data:
+                form_data[field] = 'false'
+            else:
+                form_data[field] = 'true'
+
+        # Validate and save settings
+        errors = []
+
+        # Validate numeric fields
+        numeric_validations = {
+            'check_interval': (60, 86400, 'Check interval must be between 60 and 86400 seconds'),
+            'request_timeout': (5, 300, 'Request timeout must be between 5 and 300 seconds'),
+            'retry_attempts': (1, 10, 'Retry attempts must be between 1 and 10'),
+            'error_threshold': (1, 20, 'Error threshold must be between 1 and 20'),
+            'history_retention': (1, 365, 'History retention must be between 1 and 365 days'),
+            'max_concurrent_checks': (1, 50, 'Max concurrent checks must be between 1 and 50')
+        }
+
+        for field, (min_val, max_val, error_msg) in numeric_validations.items():
+            try:
+                value = int(form_data.get(field, 0))
+                if not min_val <= value <= max_val:
+                    errors.append(error_msg)
+                else:
+                    form_data[field] = str(value)
+            except (ValueError, TypeError):
+                errors.append(f"Invalid value for {field.replace('_', ' ')}")
+
+        # Validate email if provided
+        email = form_data.get('notification_email', '').strip()
+        if email and '@' not in email:
+            errors.append('Invalid email address format')
+
+        if errors:
+            for error in errors:
+                flash(error, 'error')
+            return redirect(url_for('settings_page'))
+
+        # Save all settings to database
+        for key, value in form_data.items():
+            try:
+                db.set_setting(key, str(value))
+            except Exception as e:
+                logger.error(f"Error saving setting {key}: {e}")
+                flash(f"Error saving {key.replace('_', ' ')}", 'error')
+
+        flash('Settings updated successfully!', 'success')
+        logger.info("System settings updated")
+
+        return redirect(url_for('settings_page'))
+
+    except Exception as e:
+        logger.error(f"Error updating settings: {e}")
+        flash('Failed to update settings', 'error')
+        return redirect(url_for('settings_page'))
 
 
 @app.errorhandler(404)

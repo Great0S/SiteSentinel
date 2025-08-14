@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alert Management - Site Sentinel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gradient-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-bg-dark: linear-gradient(135deg,#0f0f23 0%,#1a1a2e 50%,#16213e 100%);
+            --glass-bg: rgba(255,255,255,0.95);
+            --glass-bg-dark: rgba(15,15,35,0.85);
+            --card-bg: rgba(255,255,255,0.92);
+            --card-bg-dark: rgba(30,41,59,0.85);
+        }
+        
+        * { font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background: var(--gradient-bg); 
+            min-height: 100vh; 
+            transition: all 0.3s ease;
+        }
+        
+        body.dark {
+            background: var(--gradient-bg-dark);
+        }
+        
+        body.dark .glass-panel {
+            background: var(--glass-bg-dark);
+        }
+        
+        body.dark .glass-card {
+            background: var(--card-bg-dark);
+        }
+        
+        .glass-panel { 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(20px) saturate(1.4); 
+            -webkit-backdrop-filter: blur(20px) saturate(1.4);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card { 
+            background: var(--card-bg); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .status-chip { 
+            display:inline-flex; 
+            align-items:center; 
+            gap:6px; 
+            padding:0.4rem 0.85rem; 
+            font-size:0.7rem; 
+            font-weight:600; 
+            border-radius:0.5rem; 
+            backdrop-filter:blur(10px); 
+            transition:all 0.3s ease;
+        }
+        
+        .btn-primary { 
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); 
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover { 
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); 
+            transform: translateY(-1px);
+        }
+        
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-tab.active {
+            background: rgba(255,255,255,0.9);
+            color: #4f46e5;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .nav-tab:not(.active) {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .nav-tab:not(.active):hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .config-input {
+            background: rgba(255,255,255,0.9);
+            border: 1px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .config-input:focus {
+            background: rgba(255,255,255,0.95);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+        }
+        
+        .channel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .channel-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .channel-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .hidden { display: none; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block !important; }
+        
+        /* Ensure the default channels tab is visible */
+        #channels.tab-content { display: block; }
+
+        .channel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .channel-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .channel-icon {
+            font-size: 1.5rem;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-enabled {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-disabled {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-not-configured {
+            background: rgba(156, 163, 175, 0.2);
+            color: #9ca3af;
+            border: 1px solid rgba(156, 163, 175, 0.3);
+        }
+
+        .channel-config {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .channel-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background: rgba(59, 130, 246, 0.8);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: rgba(59, 130, 246, 1);
+        }
+
+        .btn-success {
+            background: rgba(16, 185, 129, 0.8);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: rgba(16, 185, 129, 1);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.8);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 1);
+        }
+
+        .btn-secondary {
+            background: rgba(107, 114, 128, 0.8);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(107, 114, 128, 1);
+        }
+
+        .alert-history {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
+
+        .alert-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+        }
+
+        .alert-critical {
+            border-left-color: #ef4444;
+        }
+
+        .alert-high {
+            border-left-color: #f97316;
+        }
+
+        .alert-medium {
+            border-left-color: #eab308;
+        }
+
+        .alert-low {
+            border-left-color: #10b981;
+        }
+
+        .alert-title {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-meta {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-message {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+        }
+
+        .test-alert-form {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            color: white;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .loading {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 2rem;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fecaca;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.2);
+            color: #a7f3d0;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .success-message, .error-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            min-width: 300px;
+            backdrop-filter: blur(10px);
+            border: 1px solid;
+            animation: slideInRight 0.3s ease-out;
+        }
+        
+        .success-message {
+            background: rgba(34, 197, 94, 0.9);
+            border-color: rgba(34, 197, 94, 0.3);
+            color: white;
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.9);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: white;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-500 via-purple-600 to-indigo-800 min-h-screen">
+    <!-- Navigation Header -->
+    <nav class="glass-panel shadow-xl border-0 border-b border-white/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-shield-alt text-2xl text-indigo-600"></i>
+                    <div>
+                        <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Site Sentinel</h1>
+                        <p class="text-xs text-gray-600">Alert Management</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-indigo-600 transition-colors">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                    <button id="darkModeToggle" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors">
+                        <i class="fas fa-moon text-gray-600"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-white mb-2">Alert Management</h1>
+            <p class="text-white/80 text-lg">Configure and monitor your alert channels</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="glass-panel rounded-2xl p-2 mb-8 shadow-xl">
+            <div class="flex space-x-2">
+                <button class="nav-tab active" onclick="showTab('channels')">
+                    <i class="fas fa-bell mr-2"></i>Alert Channels
+                </button>
+                <button class="nav-tab" onclick="showTab('config')">
+                    <i class="fas fa-cog mr-2"></i>Configuration
+                </button>
+                <button class="nav-tab" onclick="showTab('test')">
+                    <i class="fas fa-paper-plane mr-2"></i>Test Alerts
+                </button>
+                <button class="nav-tab" onclick="showTab('history')">
+                    <i class="fas fa-history mr-2"></i>Alert History
+                </button>
+            </div>
+        </div>
+
+        <!-- Alert Channels Tab -->
+        <div id="channels" class="tab-content active">
+            <div class="glass-card rounded-2xl shadow-2xl">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-bell mr-3 text-blue-400"></i>
+                    Notification Channels
+                </h2>
+                
+                <!-- Channel Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="glass-panel rounded-xl p-6 text-center">
+                        <div class="text-3xl font-bold text-white" id="totalChannels">6</div>
+                        <div class="text-white/70 text-sm mt-2">Total Channels</div>
+                    </div>
+                    <div class="glass-panel rounded-xl p-6 text-center">
+                        <div class="text-3xl font-bold text-green-400" id="activeChannels">-</div>
+                        <div class="text-white/70 text-sm mt-2">Active Channels</div>
+                    </div>
+                    <div class="glass-panel rounded-xl p-6 text-center">
+                        <div class="text-3xl font-bold text-blue-400" id="configuredChannels">-</div>
+                        <div class="text-white/70 text-sm mt-2">Configured</div>
+                    </div>
+                </div>
+
+                <!-- Channel Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="channelGrid">
+                    <!-- Loading state - will be replaced by JavaScript -->
+                    <div class="flex items-center justify-center p-8 col-span-full">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+                        <span class="ml-3 text-white">Loading channels...</span>
+                    </div>
+                </div>
+                
+                <!-- Static fallback content for debugging -->
+                <div id="staticChannels" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                    <div class="glass-panel rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-3">
+                                <i class="fab fa-slack text-2xl text-green-400"></i>
+                                <h3 class="text-lg font-semibold text-white">Slack</h3>
+                            </div>
+                            <span class="px-3 py-1 bg-gray-500 text-white text-sm rounded-full">Not Configured</span>
+                        </div>
+                        <p class="text-white/70 text-sm mb-4">Send alerts to Slack channels</p>
+                        <button class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm">Configure</button>
+                    </div>
+                    
+                    <div class="glass-panel rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-3">
+                                <i class="fab fa-discord text-2xl text-purple-400"></i>
+                                <h3 class="text-lg font-semibold text-white">Discord</h3>
+                            </div>
+                            <span class="px-3 py-1 bg-gray-500 text-white text-sm rounded-full">Not Configured</span>
+                        </div>
+                        <p class="text-white/70 text-sm mb-4">Send alerts to Discord channels</p>
+                        <button class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm">Configure</button>
+                    </div>
+                    
+                    <div class="glass-panel rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-envelope text-2xl text-red-400"></i>
+                                <h3 class="text-lg font-semibold text-white">Email</h3>
+                            </div>
+                            <span class="px-3 py-1 bg-gray-500 text-white text-sm rounded-full">Not Configured</span>
+                        </div>
+                        <p class="text-white/70 text-sm mb-4">Send alerts via email</p>
+                        <button class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm">Configure</button>
+                    </div>
+                </div>
+                
+                <!-- Fallback content if JavaScript fails -->
+                <noscript>
+                    <div class="glass-panel rounded-xl p-6 text-center mt-6">
+                        <div class="text-red-400 text-xl mb-4">⚠️ JavaScript Required</div>
+                        <div class="text-white">This page requires JavaScript to be enabled for full functionality.</div>
+                    </div>
+                </noscript>
+            </div>
+        </div>
+
+        <!-- Alert History Tab -->
+        <div id="history" class="tab-content">
+            <div class="glass-card rounded-2xl shadow-2xl">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-history mr-3 text-orange-400"></i>
+                    Alert History
+                </h2>
+                
+                <div class="max-h-96 overflow-y-auto" id="alertHistory">
+                    <div class="flex items-center justify-center p-8 text-white/70">
+                        <i class="fas fa-history mr-3"></i>
+                        Loading alert history...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Alerts Tab -->
+        <div id="test" class="tab-content">
+            <div class="glass-card rounded-2xl shadow-2xl">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-paper-plane mr-3 text-green-400"></i>
+                    Test Alert System
+                </h2>
+
+                <div class="glass-panel rounded-xl p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-white font-medium mb-2">Alert Type</label>
+                            <select id="testAlertType" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all">
+                                <option value="website_down">Website Down</option>
+                                <option value="website_up">Website Up</option>
+                                <option value="slow_response">Slow Response</option>
+                                <option value="ssl_expiring">SSL Expiring</option>
+                                <option value="dns_issue">DNS Issue</option>
+                                <option value="health_score_low">Low Health Score</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-white font-medium mb-2">Severity</label>
+                            <select id="testSeverity" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-white font-medium mb-2">Test URL</label>
+                            <input type="url" id="testUrl" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                   placeholder="https://example.com">
+                        </div>
+                        <div>
+                            <label class="block text-white font-medium mb-2">Channel</label>
+                            <select id="testChannel" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all">
+                                <option value="all">All Channels</option>
+                                <option value="slack">Slack Only</option>
+                                <option value="discord">Discord Only</option>
+                                <option value="email">Email Only</option>
+                                <option value="sms">SMS Only</option>
+                                <option value="teams">Teams Only</option>
+                                <option value="telegram">Telegram Only</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-white font-medium mb-2">Custom Message</label>
+                            <textarea id="testMessage" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all h-20" 
+                                      placeholder="Custom test message (optional)"></textarea>
+                        </div>
+                    </div>
+                    <button onclick="sendTestAlert()" class="btn-primary mt-6 px-8 py-3 rounded-lg text-white font-medium text-lg">
+                        <i class="fas fa-paper-plane mr-2"></i>Send Test Alert
+                    </button>
+                </div>
+
+                <!-- Test Results -->
+                <div id="testResults" class="mt-6 hidden">
+                    <h3 class="text-lg font-semibold text-white mb-4">Test Results</h3>
+                    <div id="testResultsContent" class="space-y-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuration Tab -->
+        <div id="config" class="tab-content">
+            <div class="glass-card rounded-2xl shadow-2xl">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                    <i class="fas fa-cog mr-3 text-purple-400"></i>
+                    Alert Configuration
+                </h2>
+
+                <!-- Configuration Form -->
+                <div class="space-y-8">
+                    <!-- Slack Configuration -->
+                    <div class="glass-panel rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+                            <i class="fab fa-slack mr-3 text-green-400"></i>
+                            Slack Configuration
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-white font-medium mb-2">Webhook URL</label>
+                                <input type="url" id="slackWebhook" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                       placeholder="https://hooks.slack.com/services/...">
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Channel</label>
+                                <input type="text" id="slackChannel" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                       placeholder="#alerts">
+                            </div>
+                        </div>
+                        <button onclick="saveSlackConfig()" class="btn-primary mt-4 px-6 py-2 rounded-lg text-white font-medium">
+                            <i class="fas fa-save mr-2"></i>Save Slack Config
+                        </button>
+                    </div>
+
+                    <!-- Discord Configuration -->
+                    <div class="glass-panel rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+                            <i class="fab fa-discord mr-3 text-indigo-400"></i>
+                            Discord Configuration
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-white font-medium mb-2">Webhook URL</label>
+                                <input type="url" id="discordWebhook" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                       placeholder="https://discord.com/api/webhooks/...">
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Username</label>
+                                <input type="text" id="discordUsername" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                       placeholder="SiteSentinel Bot">
+                            </div>
+                        </div>
+                        <button onclick="saveDiscordConfig()" class="btn-primary mt-4 px-6 py-2 rounded-lg text-white font-medium">
+                            <i class="fas fa-save mr-2"></i>Save Discord Config
+                        </button>
+                    </div>
+
+                    <!-- Email Configuration -->
+                    <div class="glass-panel rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+                            <i class="fas fa-envelope mr-3 text-red-400"></i>
+                            Email Configuration
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-white font-medium mb-2">SMTP Server</label>
+                                <input type="text" id="emailServer" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                       placeholder="smtp.gmail.com">
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">SMTP Port</label>
+                                <input type="number" id="emailPort" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                       placeholder="587">
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Sender Email</label>
+                                <input type="email" id="emailSender" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                       placeholder="alerts@yoursite.com">
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Sender Password</label>
+                                <input type="password" id="emailPassword" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                       placeholder="••••••••">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-white font-medium mb-2">Recipient Email</label>
+                                <input type="email" id="emailRecipient" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                       placeholder="admin@yoursite.com">
+                            </div>
+                        </div>
+                        <button onclick="saveEmailConfig()" class="btn-primary mt-4 px-6 py-2 rounded-lg text-white font-medium">
+                            <i class="fas fa-save mr-2"></i>Save Email Config
+                        </button>
+                    </div>
+
+                    <!-- SMS Configuration -->
+                    <div class="glass-panel rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+                            <i class="fas fa-sms mr-3 text-yellow-400"></i>
+                            SMS Configuration (Twilio)
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-white font-medium mb-2">Account SID</label>
+                                <input type="text" id="twilioSid" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                       placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Auth Token</label>
+                                <input type="password" id="twilioToken" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                       placeholder="••••••••••••••••••••••••••••••••">
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">From Number</label>
+                                <input type="tel" id="twilioFrom" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                       placeholder="+1234567890">
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">To Number</label>
+                                <input type="tel" id="twilioTo" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                       placeholder="+1234567890">
+                            </div>
+                        </div>
+                        <button onclick="saveSMSConfig()" class="btn-primary mt-4 px-6 py-2 rounded-lg text-white font-medium">
+                            <i class="fas fa-save mr-2"></i>Save SMS Config
+                        </button>
+                    </div>
+
+                    <!-- Teams Configuration -->
+                    <div class="glass-panel rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+                            <i class="fab fa-microsoft mr-3 text-blue-500"></i>
+                            Microsoft Teams Configuration
+                        </h3>
+                        <div>
+                            <label class="block text-white font-medium mb-2">Webhook URL</label>
+                            <input type="url" id="teamsWebhook" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                   placeholder="https://outlook.office.com/webhook/...">
+                        </div>
+                        <button onclick="saveTeamsConfig()" class="btn-primary mt-4 px-6 py-2 rounded-lg text-white font-medium">
+                            <i class="fas fa-save mr-2"></i>Save Teams Config
+                        </button>
+                    </div>
+
+                    <!-- Telegram Configuration -->
+                    <div class="glass-panel rounded-xl p-6">
+                        <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+                            <i class="fab fa-telegram mr-3 text-blue-400"></i>
+                            Telegram Configuration
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-white font-medium mb-2">Bot Token</label>
+                                <input type="password" id="telegramToken" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                       placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11">
+                            </div>
+                            <div>
+                                <label class="block text-white font-medium mb-2">Chat ID</label>
+                                <input type="text" id="telegramChatId" class="config-input w-full px-4 py-3 rounded-lg focus:outline-none transition-all" 
+                                       placeholder="-123456789">
+                            </div>
+                        </div>
+                        <button onclick="saveTelegramConfig()" class="btn-primary mt-4 px-6 py-2 rounded-lg text-white font-medium">
+                            <i class="fas fa-save mr-2"></i>Save Telegram Config
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('JavaScript is loading...');
+        
+        // Tab functionality
+        let channelsData = {};
+        let alertHistory = [];
+
+        function showTab(tabName) {
+            console.log('Switching to tab:', tabName);
+            
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+                tab.style.display = 'none';
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab (the IDs are just the tab names without -tab suffix)
+            const targetTab = document.getElementById(tabName);
+            if (targetTab) {
+                targetTab.style.display = 'block';
+                targetTab.classList.add('active');
+                console.log('Showed tab:', tabName);
+            } else {
+                console.error('Tab not found:', tabName);
+            }
+            
+            // Set active nav tab
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            
+            // Load data for specific tabs
+            if (tabName === 'history' && alertHistory.length === 0) {
+                loadAlertHistory();
+            } else if (tabName === 'config') {
+                loadConfiguration();
+            }
+        }
+        
+        console.log('Tab switching function defined');
+
+        // Load alert channels
+        async function loadChannels() {
+            console.log('Loading channels...');
+            try {
+                const response = await fetch('/api/alerts/channels');
+                console.log('Response:', response);
+                const data = await response.json();
+                console.log('Data:', data);
+                
+                if (data.success) {
+                    channelsData = data.channels;
+                    console.log('Channels data:', channelsData);
+                    renderChannels();
+                    updateStats();
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                console.error('Error loading channels:', error);
+                // Show static fallback content when API fails
+                const staticChannels = document.getElementById('staticChannels');
+                const channelGrid = document.getElementById('channelGrid');
+                if (staticChannels && channelGrid) {
+                    channelGrid.style.display = 'none';
+                    staticChannels.style.display = 'grid';
+                }
+                // Update stats with default values
+                document.getElementById('activeChannels').textContent = '0';
+                document.getElementById('configuredChannels').textContent = '0';
+            }
+        }
+
+        // Render channels
+        function renderChannels() {
+            console.log('Rendering channels...');
+            
+            // Hide the static fallback content
+            const staticChannels = document.getElementById('staticChannels');
+            if (staticChannels) {
+                staticChannels.style.display = 'none';
+            }
+            
+            const channelIcons = {
+                'Slack': '💬',
+                'Discord': '🎮',
+                'Email': '📧',
+                'SMS': '📱',
+                'Teams': '👥',
+                'Telegram': '✈️'
+            };
+
+            const grid = document.getElementById('channelGrid');
+            grid.innerHTML = '';
+
+            const channels = ['Slack', 'Discord', 'Email', 'SMS', 'Teams', 'Telegram'];
+            
+            channels.forEach(channelName => {
+                const channel = channelsData[channelName];
+                const isConfigured = channel ? true : false;
+                const isEnabled = channel ? channel.enabled : false;
+                
+                let statusClass, statusText;
+                if (!isConfigured) {
+                    statusClass = 'status-not-configured';
+                    statusText = 'Not Configured';
+                } else if (isEnabled) {
+                    statusClass = 'status-enabled';
+                    statusText = 'Enabled';
+                } else {
+                    statusClass = 'status-disabled';
+                    statusText = 'Disabled';
+                }
+
+                const card = document.createElement('div');
+                card.className = 'channel-card';
+                card.innerHTML = `
+                    <div class="channel-header">
+                        <div class="channel-name">
+                            <span class="channel-icon">${channelIcons[channelName] || '📢'}</span>
+                            ${channelName}
+                        </div>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                    </div>
+                    <div class="channel-config">
+                        ${isConfigured ? 
+                            `Type: ${channel.type || 'Unknown'}<br>Last used: Recently` : 
+                            'Configure environment variables to enable this channel'
+                        }
+                    </div>
+                    <div class="channel-actions">
+                        ${isConfigured ? `
+                            <button class="btn ${isEnabled ? 'btn-danger' : 'btn-success'}" 
+                                    onclick="toggleChannel('${channelName}', ${!isEnabled})">
+                                ${isEnabled ? '🔇 Disable' : '🔊 Enable'}
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-secondary" onclick="showChannelHelp('${channelName}')">
+                            ❓ Help
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Update statistics
+        function updateStats() {
+            const channels = Object.keys(channelsData);
+            const activeChannels = channels.filter(ch => channelsData[ch].enabled).length;
+            
+            document.getElementById('totalChannels').textContent = 6; // Total possible channels
+            document.getElementById('activeChannels').textContent = activeChannels;
+            document.getElementById('configuredChannels').textContent = channels.length;
+        }
+
+        // Toggle channel
+        async function toggleChannel(channelName, enable) {
+            try {
+                const response = await fetch(`/api/alerts/channels/${channelName}/toggle`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ enabled: enable })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update local data
+                    if (channelsData[channelName]) {
+                        channelsData[channelName].enabled = enable;
+                    }
+                    renderChannels();
+                    updateStats();
+                    
+                    // Show success message
+                    showMessage(`Channel ${channelName} ${enable ? 'enabled' : 'disabled'} successfully`, 'success');
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                showMessage(`Error toggling channel: ${error.message}`, 'error');
+            }
+        }
+
+        // Load alert history
+        async function loadAlertHistory() {
+            try {
+                const response = await fetch('/api/alerts/history?limit=50');
+                const data = await response.json();
+                
+                if (data.success) {
+                    alertHistory = data.alerts;
+                    renderAlertHistory();
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                document.getElementById('alertHistory').innerHTML = 
+                    `<div class="error-message">Error loading alert history: ${error.message}</div>`;
+            }
+        }
+
+        // Render alert history
+        function renderAlertHistory() {
+            const container = document.getElementById('alertHistory');
+            
+            if (alertHistory.length === 0) {
+                container.innerHTML = '<div style="color: rgba(255,255,255,0.7); text-align: center; padding: 2rem;">No alerts found</div>';
+                return;
+            }
+            
+            container.innerHTML = alertHistory.map(alert => {
+                const severityClass = `alert-${alert.severity.toLowerCase()}`;
+                const date = new Date(alert.timestamp).toLocaleString();
+                
+                return `
+                    <div class="alert-item ${severityClass}">
+                        <div class="alert-title">${alert.title}</div>
+                        <div class="alert-meta">
+                            <span>${alert.website_url}</span>
+                            <span>${date}</span>
+                        </div>
+                        <div class="alert-message">${alert.message}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Send test alert
+        async function sendTestAlert() {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '⏳ Sending...';
+            button.disabled = true;
+            
+            try {
+                const alertType = document.getElementById('testAlertType').value;
+                const severity = document.getElementById('testSeverity').value;
+                const url = document.getElementById('testUrl').value || 'https://example.com';
+                const channel = document.getElementById('testChannel').value;
+                const customMessage = document.getElementById('testMessage').value;
+                
+                const payload = {
+                    alert_type: alertType,
+                    severity: severity.toUpperCase(),
+                    website_url: url,
+                    channel: channel,
+                    custom_message: customMessage
+                };
+                
+                const response = await fetch('/api/alerts/test', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const results = data.results;
+                    const successChannels = Object.keys(results).filter(ch => results[ch]);
+                    const failedChannels = Object.keys(results).filter(ch => !results[ch]);
+                    
+                    const testResults = document.getElementById('testResults');
+                    const testResultsContent = document.getElementById('testResultsContent');
+                    
+                    testResults.classList.remove('hidden');
+                    
+                    let resultHtml = '';
+                    if (successChannels.length > 0) {
+                        resultHtml += `<div class="glass-panel rounded-lg p-4 border-green-400">
+                            <div class="text-green-400 font-semibold mb-2">✅ Successful Channels</div>
+                            <div class="text-white">${successChannels.join(', ')}</div>
+                        </div>`;
+                    }
+                    if (failedChannels.length > 0) {
+                        resultHtml += `<div class="glass-panel rounded-lg p-4 border-red-400">
+                            <div class="text-red-400 font-semibold mb-2">❌ Failed Channels</div>
+                            <div class="text-white">${failedChannels.join(', ')}</div>
+                        </div>`;
+                    }
+                    
+                    testResultsContent.innerHTML = resultHtml;
+                    showMessage('Test alert sent successfully!', 'success');
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                const testResults = document.getElementById('testResults');
+                const testResultsContent = document.getElementById('testResultsContent');
+                
+                testResults.classList.remove('hidden');
+                testResultsContent.innerHTML = `
+                    <div class="glass-panel rounded-lg p-4 border-red-400">
+                        <div class="text-red-400 font-semibold mb-2">❌ Error</div>
+                        <div class="text-white">${error.message}</div>
+                    </div>
+                `;
+                showMessage('Error sending test alert: ' + error.message, 'error');
+            } finally {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        }
+
+        // Load configuration
+        async function loadConfiguration() {
+            try {
+                const response = await fetch('/api/alerts/config');
+                const data = await response.json();
+                
+                if (data.success) {
+                    renderConfiguration(data.configuration);
+                } else {
+                    throw new Error(data.error);
+                }
+            } catch (error) {
+                document.getElementById('configDetails').innerHTML = 
+                    `<div class="error-message">Error loading configuration: ${error.message}</div>`;
+            }
+        }
+
+        // Render configuration
+        function renderConfiguration(config) {
+            const container = document.getElementById('configDetails');
+            
+            const configCards = Object.entries(config).map(([channel, details]) => {
+                const status = details.configured ? 'Configured' : 'Not Configured';
+                const statusClass = details.configured ? 'status-enabled' : 'status-not-configured';
+                
+                let detailsHtml = '';
+                Object.entries(details).forEach(([key, value]) => {
+                    if (key !== 'configured') {
+                        detailsHtml += `<div><strong>${key}:</strong> ${value}</div>`;
+                    }
+                });
+                
+                return `
+                    <div class="channel-card">
+                        <div class="channel-header">
+                            <div class="channel-name">${channel.charAt(0).toUpperCase() + channel.slice(1)}</div>
+                            <span class="status-badge ${statusClass}">${status}</span>
+                        </div>
+                        <div class="channel-config">
+                            ${detailsHtml || 'No additional configuration details'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            container.innerHTML = `
+                <div class="channel-grid">
+                    ${configCards}
+                </div>
+                <div style="margin-top: 2rem; padding: 1rem; background: rgba(59, 130, 246, 0.1); border-radius: 10px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                    <h3 style="color: white; margin-bottom: 1rem;">Environment Variables Setup</h3>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 1rem;">
+                        To configure alert channels, set these environment variables and restart the application:
+                    </p>
+                    <pre style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; color: #a7f3d0; font-size: 0.9rem; overflow-x: auto;">
+# Slack
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
+SLACK_CHANNEL=#alerts
+SLACK_USERNAME=SiteSentinel
+
+# Discord  
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
+DISCORD_USERNAME=SiteSentinel
+
+# Email
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=your-email@gmail.com
+SMTP_PASSWORD=your-app-password
+SENDER_EMAIL=your-email@gmail.com
+RECIPIENT_EMAILS=alert1@example.com,alert2@example.com
+SMTP_USE_TLS=true
+
+# SMS (Twilio)
+TWILIO_ACCOUNT_SID=your-account-sid
+TWILIO_AUTH_TOKEN=your-auth-token
+TWILIO_FROM_NUMBER=+1234567890
+SMS_TO_NUMBERS=+1234567890,+0987654321
+
+# Microsoft Teams
+TEAMS_WEBHOOK_URL=https://outlook.office.com/webhook/...
+
+# Telegram
+TELEGRAM_BOT_TOKEN=your-bot-token
+TELEGRAM_CHAT_IDS=chat-id-1,chat-id-2
+                    </pre>
+                </div>
+            `;
+        }
+
+        // Configuration saving functions
+        async function saveSlackConfig() {
+            const webhook = document.getElementById('slackWebhook').value;
+            const channel = document.getElementById('slackChannel').value;
+
+            if (!webhook) {
+                showMessage('Webhook URL is required', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/alerts/config/slack', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ webhook_url: webhook, channel: channel })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('Slack configuration saved successfully!', 'success');
+                    loadChannels(); // Refresh channel status
+                } else {
+                    showMessage(result.error || 'Failed to save configuration', 'error');
+                }
+            } catch (error) {
+                showMessage('Error saving configuration: ' + error.message, 'error');
+            }
+        }
+
+        async function saveDiscordConfig() {
+            const webhook = document.getElementById('discordWebhook').value;
+            const username = document.getElementById('discordUsername').value;
+
+            if (!webhook) {
+                showMessage('Webhook URL is required', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/alerts/config/discord', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ webhook_url: webhook, username: username })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('Discord configuration saved successfully!', 'success');
+                    loadChannels();
+                } else {
+                    showMessage(result.error || 'Failed to save configuration', 'error');
+                }
+            } catch (error) {
+                showMessage('Error saving configuration: ' + error.message, 'error');
+            }
+        }
+
+        async function saveEmailConfig() {
+            const server = document.getElementById('emailServer').value;
+            const port = document.getElementById('emailPort').value;
+            const sender = document.getElementById('emailSender').value;
+            const password = document.getElementById('emailPassword').value;
+            const recipient = document.getElementById('emailRecipient').value;
+
+            if (!server || !port || !sender || !password || !recipient) {
+                showMessage('All email fields are required', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/alerts/config/email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ server, port, sender, password, recipient })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('Email configuration saved successfully!', 'success');
+                    loadChannels();
+                } else {
+                    showMessage(result.error || 'Failed to save configuration', 'error');
+                }
+            } catch (error) {
+                showMessage('Error saving configuration: ' + error.message, 'error');
+            }
+        }
+
+        async function saveSMSConfig() {
+            const accountSid = document.getElementById('twilioSid').value;
+            const authToken = document.getElementById('twilioToken').value;
+            const fromNumber = document.getElementById('twilioFrom').value;
+            const toNumber = document.getElementById('twilioTo').value;
+
+            if (!accountSid || !authToken || !fromNumber || !toNumber) {
+                showMessage('All SMS fields are required', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/alerts/config/sms', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ account_sid: accountSid, auth_token: authToken, from_number: fromNumber, to_number: toNumber })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('SMS configuration saved successfully!', 'success');
+                    loadChannels();
+                } else {
+                    showMessage(result.error || 'Failed to save configuration', 'error');
+                }
+            } catch (error) {
+                showMessage('Error saving configuration: ' + error.message, 'error');
+            }
+        }
+
+        async function saveTeamsConfig() {
+            const webhook = document.getElementById('teamsWebhook').value;
+
+            if (!webhook) {
+                showMessage('Webhook URL is required', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/alerts/config/teams', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ webhook_url: webhook })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('Teams configuration saved successfully!', 'success');
+                    loadChannels();
+                } else {
+                    showMessage(result.error || 'Failed to save configuration', 'error');
+                }
+            } catch (error) {
+                showMessage('Error saving configuration: ' + error.message, 'error');
+            }
+        }
+
+        async function saveTelegramConfig() {
+            const botToken = document.getElementById('telegramToken').value;
+            const chatId = document.getElementById('telegramChatId').value;
+
+            if (!botToken || !chatId) {
+                showMessage('Bot token and chat ID are required', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/alerts/config/telegram', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ bot_token: botToken, chat_id: chatId })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('Telegram configuration saved successfully!', 'success');
+                    loadChannels();
+                } else {
+                    showMessage(result.error || 'Failed to save configuration', 'error');
+                }
+            } catch (error) {
+                showMessage('Error saving configuration: ' + error.message, 'error');
+            }
+        }
+
+        // Show channel help
+        function showChannelHelp(channelName) {
+            const helpTexts = {
+                'Slack': 'Create a Slack webhook in your workspace settings and set SLACK_WEBHOOK_URL environment variable.',
+                'Discord': 'Create a Discord webhook in your server settings and set DISCORD_WEBHOOK_URL environment variable.',
+                'Email': 'Configure SMTP settings with your email provider. For Gmail, use app passwords.',
+                'SMS': 'Sign up for Twilio and configure TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN.',
+                'Teams': 'Create a Teams webhook connector and set TEAMS_WEBHOOK_URL environment variable.',
+                'Telegram': 'Create a Telegram bot with @BotFather and set TELEGRAM_BOT_TOKEN.'
+            };
+            
+            alert(`${channelName} Setup:\n\n${helpTexts[channelName] || 'Help not available for this channel.'}`);
+        }
+
+        // Show message
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'success' ? 'success-message' : 'error-message';
+            messageDiv.textContent = message;
+            messageDiv.style.position = 'fixed';
+            messageDiv.style.top = '20px';
+            messageDiv.style.right = '20px';
+            messageDiv.style.zIndex = '1000';
+            messageDiv.style.minWidth = '300px';
+            
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        // Dark mode toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            const icon = document.querySelector('#darkModeToggle i');
+            icon.className = isDark ? 'fas fa-sun text-yellow-400' : 'fas fa-moon text-gray-600';
+            localStorage.setItem('darkMode', isDark);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded - initializing alert page...');
+            
+            // Initialize dark mode
+            const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (savedDarkMode) {
+                document.body.classList.add('dark');
+                const icon = document.querySelector('#darkModeToggle i');
+                if (icon) icon.className = 'fas fa-sun text-yellow-400';
+            }
+            
+            // Add dark mode toggle event listener
+            const darkModeBtn = document.getElementById('darkModeToggle');
+            if (darkModeBtn) {
+                darkModeBtn.addEventListener('click', toggleDarkMode);
+            }
+            
+            // Load initial data
+            console.log('Starting to load channels...');
+            loadChannels();
+        });
+    </script>
+</body>
+</html>

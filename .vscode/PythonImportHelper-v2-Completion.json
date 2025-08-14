@@ -106,11 +106,36 @@
         "documentation": {}
     },
     {
+        "label": "asyncio",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "asyncio",
+        "description": "asyncio",
+        "detail": "asyncio",
+        "documentation": {}
+    },
+    {
         "label": "datetime",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "datetime",
         "description": "datetime",
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
         "detail": "datetime",
         "documentation": {}
     },
@@ -155,7 +180,39 @@
         "documentation": {}
     },
     {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "timedelta",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
         "label": "websites",
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "isExtraImport": true,
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "check_websites",
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
         "isExtraImport": true,
@@ -195,6 +252,102 @@
         "documentation": {}
     },
     {
+        "label": "alert_manager",
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "isExtraImport": true,
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "AlertMessage",
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "isExtraImport": true,
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "AlertSeverity",
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "isExtraImport": true,
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "AlertType",
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "isExtraImport": true,
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "alert_manager",
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "isExtraImport": true,
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "AlertMessage",
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "isExtraImport": true,
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "AlertSeverity",
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "isExtraImport": true,
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "AlertType",
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "isExtraImport": true,
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "alert_manager",
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "isExtraImport": true,
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "AlertMessage",
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "isExtraImport": true,
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "AlertSeverity",
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "isExtraImport": true,
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "AlertType",
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "isExtraImport": true,
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
         "label": "threading",
         "kind": 6,
         "isExtraImport": true,
@@ -209,6 +362,22 @@
         "description": "threading",
         "isExtraImport": true,
         "detail": "threading",
+        "documentation": {}
+    },
+    {
+        "label": "db",
+        "importPath": "database",
+        "description": "database",
+        "isExtraImport": true,
+        "detail": "database",
+        "documentation": {}
+    },
+    {
+        "label": "db",
+        "importPath": "database",
+        "description": "database",
+        "isExtraImport": true,
+        "detail": "database",
         "documentation": {}
     },
     {
@@ -244,21 +413,20 @@
         "documentation": {}
     },
     {
+        "label": "dns_monitor",
+        "importPath": "dns_monitor",
+        "description": "dns_monitor",
+        "isExtraImport": true,
+        "detail": "dns_monitor",
+        "documentation": {}
+    },
+    {
         "label": "requests",
         "kind": 6,
         "isExtraImport": true,
         "importPath": "requests",
         "description": "requests",
         "detail": "requests",
-        "documentation": {}
-    },
-    {
-        "label": "asyncio",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "asyncio",
-        "description": "asyncio",
-        "detail": "asyncio",
         "documentation": {}
     },
     {
@@ -333,36 +501,51 @@
         "documentation": {}
     },
     {
-        "label": "pdfkit",
-        "kind": 6,
+        "label": "MIMEText",
+        "importPath": "email.mime.text",
+        "description": "email.mime.text",
         "isExtraImport": true,
-        "importPath": "pdfkit",
-        "description": "pdfkit",
-        "detail": "pdfkit",
+        "detail": "email.mime.text",
         "documentation": {}
     },
     {
-        "label": "secure_filename",
-        "importPath": "werkzeug.utils",
-        "description": "werkzeug.utils",
+        "label": "MIMEMultipart",
+        "importPath": "email.mime.multipart",
+        "description": "email.mime.multipart",
         "isExtraImport": true,
-        "detail": "werkzeug.utils",
+        "detail": "email.mime.multipart",
         "documentation": {}
     },
     {
-        "label": "config",
-        "importPath": "config",
-        "description": "config",
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
         "isExtraImport": true,
-        "detail": "config",
+        "detail": "typing",
         "documentation": {}
     },
     {
-        "label": "dataclass",
-        "importPath": "dataclasses",
-        "description": "dataclasses",
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
         "isExtraImport": true,
-        "detail": "dataclasses",
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
         "documentation": {}
     },
     {
@@ -438,11 +621,116 @@
         "documentation": {}
     },
     {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
         "label": "Optional",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
         "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "dataclass",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
+        "isExtraImport": true,
+        "detail": "dataclasses",
+        "documentation": {}
+    },
+    {
+        "label": "asdict",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
+        "isExtraImport": true,
+        "detail": "dataclasses",
+        "documentation": {}
+    },
+    {
+        "label": "dataclass",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
+        "isExtraImport": true,
+        "detail": "dataclasses",
+        "documentation": {}
+    },
+    {
+        "label": "Enum",
+        "importPath": "enum",
+        "description": "enum",
+        "isExtraImport": true,
+        "detail": "enum",
+        "documentation": {}
+    },
+    {
+        "label": "Client",
+        "importPath": "twilio.rest",
+        "description": "twilio.rest",
+        "isExtraImport": true,
+        "detail": "twilio.rest",
+        "documentation": {}
+    },
+    {
+        "label": "pdfkit",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pdfkit",
+        "description": "pdfkit",
+        "detail": "pdfkit",
+        "documentation": {}
+    },
+    {
+        "label": "secure_filename",
+        "importPath": "werkzeug.utils",
+        "description": "werkzeug.utils",
+        "isExtraImport": true,
+        "detail": "werkzeug.utils",
+        "documentation": {}
+    },
+    {
+        "label": "config",
+        "importPath": "config",
+        "description": "config",
+        "isExtraImport": true,
+        "detail": "config",
+        "documentation": {}
+    },
+    {
+        "label": "api_bp",
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "isExtraImport": true,
+        "detail": "api.routes",
         "documentation": {}
     },
     {
@@ -452,6 +740,49 @@
         "importPath": "sqlite3",
         "description": "sqlite3",
         "detail": "sqlite3",
+        "documentation": {}
+    },
+    {
+        "label": "dns.resolver",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "dns.resolver",
+        "description": "dns.resolver",
+        "detail": "dns.resolver",
+        "documentation": {}
+    },
+    {
+        "label": "dns.exception",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "dns.exception",
+        "description": "dns.exception",
+        "detail": "dns.exception",
+        "documentation": {}
+    },
+    {
+        "label": "urlparse",
+        "importPath": "urllib.parse",
+        "description": "urllib.parse",
+        "isExtraImport": true,
+        "detail": "urllib.parse",
+        "documentation": {}
+    },
+    {
+        "label": "urlparse",
+        "importPath": "urllib.parse",
+        "description": "urllib.parse",
+        "isExtraImport": true,
+        "detail": "urllib.parse",
+        "documentation": {}
+    },
+    {
+        "label": "hashlib",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "hashlib",
+        "description": "hashlib",
+        "detail": "hashlib",
         "documentation": {}
     },
     {
@@ -487,14 +818,6 @@
         "importPath": "ssl",
         "description": "ssl",
         "detail": "ssl",
-        "documentation": {}
-    },
-    {
-        "label": "urlparse",
-        "importPath": "urllib.parse",
-        "description": "urllib.parse",
-        "isExtraImport": true,
-        "detail": "urllib.parse",
         "documentation": {}
     },
     {
@@ -597,6 +920,114 @@
         "documentation": {}
     },
     {
+        "label": "get_alert_channels",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def get_alert_channels():\n    \"\"\"Get status of all alert channels\"\"\"\n    try:\n        return jsonify({\n            'success': True,\n            'channels': alert_manager.get_channel_status(),\n            'timestamp': datetime.now().isoformat()\n        })\n    except Exception as e:\n        return jsonify({'success': False, 'error': str(e)}), 500",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "get_alert_history",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def get_alert_history():\n    \"\"\"Get recent alert history\"\"\"\n    try:\n        limit = request.args.get('limit', 50, type=int)\n        recent_alerts = alert_manager.get_recent_alerts(limit)\n        return jsonify({\n            'success': True,\n            'count': len(recent_alerts),\n            'alerts': recent_alerts,\n            'timestamp': datetime.now().isoformat()",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "send_test_alert",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def send_test_alert():\n    \"\"\"Send a test alert through all configured channels\"\"\"\n    try:\n        data = request.get_json()\n        # Create test alert\n        test_alert = AlertMessage(\n            title=data.get('title', 'SiteSentinel Test Alert'),\n            message=data.get(\n                'message', 'This is a test alert to verify your notification channels are working correctly.'),\n            severity=AlertSeverity(data.get('severity', 'LOW')),",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "toggle_alert_channel",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def toggle_alert_channel(channel_name):\n    \"\"\"Enable or disable a specific alert channel\"\"\"\n    try:\n        data = request.get_json()\n        enabled = data.get('enabled', True)\n        # Find and toggle the channel\n        channel_found = False\n        for channel in alert_manager.channels:\n            if channel.name.lower() == channel_name.lower():\n                channel.enabled = enabled",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "send_website_alert",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def send_website_alert(website_url):\n    \"\"\"Send a custom alert for a specific website\"\"\"\n    try:\n        data = request.get_json()\n        # Validate required fields\n        if not data.get('title') or not data.get('message'):\n            return jsonify({'success': False, 'error': 'Title and message are required'}), 400\n        # Create custom alert\n        custom_alert = AlertMessage(\n            title=data['title'],",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "get_alert_config",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def get_alert_config():\n    \"\"\"Get current alert configuration\"\"\"\n    try:\n        import os\n        config = {\n            'slack': {\n                'configured': bool(os.getenv('SLACK_WEBHOOK_URL')),\n                'channel': os.getenv('SLACK_CHANNEL', 'Default')\n            },\n            'discord': {",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "save_slack_config",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def save_slack_config():\n    \"\"\"Save Slack configuration\"\"\"\n    try:\n        data = request.json\n        webhook_url = data.get('webhook_url')\n        channel = data.get('channel', '#alerts')\n        if not webhook_url:\n            return jsonify({'success': False, 'error': 'Webhook URL is required'}), 400\n        # Update environment variables (in production, you'd want to update actual config files)\n        import os",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "save_discord_config",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def save_discord_config():\n    \"\"\"Save Discord configuration\"\"\"\n    try:\n        data = request.json\n        webhook_url = data.get('webhook_url')\n        username = data.get('username', 'SiteSentinel Bot')\n        if not webhook_url:\n            return jsonify({'success': False, 'error': 'Webhook URL is required'}), 400\n        import os\n        os.environ['DISCORD_WEBHOOK_URL'] = webhook_url",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "save_email_config",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def save_email_config():\n    \"\"\"Save Email configuration\"\"\"\n    try:\n        data = request.json\n        server = data.get('server')\n        port = data.get('port')\n        sender = data.get('sender')\n        password = data.get('password')\n        recipient = data.get('recipient')\n        if not all([server, port, sender, password, recipient]):",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "save_sms_config",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def save_sms_config():\n    \"\"\"Save SMS configuration\"\"\"\n    try:\n        data = request.json\n        account_sid = data.get('account_sid')\n        auth_token = data.get('auth_token')\n        from_number = data.get('from_number')\n        to_number = data.get('to_number')\n        if not all([account_sid, auth_token, from_number, to_number]):\n            return jsonify({'success': False, 'error': 'All SMS fields are required'}), 400",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "save_teams_config",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def save_teams_config():\n    \"\"\"Save Teams configuration\"\"\"\n    try:\n        data = request.json\n        webhook_url = data.get('webhook_url')\n        if not webhook_url:\n            return jsonify({'success': False, 'error': 'Webhook URL is required'}), 400\n        import os\n        os.environ['TEAMS_WEBHOOK_URL'] = webhook_url\n        alert_manager.initialize_channels()",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
+        "label": "save_telegram_config",
+        "kind": 2,
+        "importPath": "api.routes",
+        "description": "api.routes",
+        "peekOfCode": "def save_telegram_config():\n    \"\"\"Save Telegram configuration\"\"\"\n    try:\n        data = request.json\n        bot_token = data.get('bot_token')\n        chat_id = data.get('chat_id')\n        if not all([bot_token, chat_id]):\n            return jsonify({'success': False, 'error': 'Bot token and chat ID are required'}), 400\n        import os\n        os.environ['TELEGRAM_BOT_TOKEN'] = bot_token",
+        "detail": "api.routes",
+        "documentation": {}
+    },
+    {
         "label": "api_bp",
         "kind": 5,
         "importPath": "api.routes",
@@ -624,6 +1055,15 @@
         "documentation": {}
     },
     {
+        "label": "sync_websites_to_db",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def sync_websites_to_db():\n    \"\"\"Synchronize in-memory websites to database with error handling and batching\"\"\"\n    if not websites:\n        return\n    success_count = 0\n    error_count = 0\n    # Batch all updates in a single transaction for better performance\n    try:\n        with db._get_connection() as conn:\n            cursor = conn.cursor()",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
         "label": "get_historical_data",
         "kind": 2,
         "importPath": "website_monitor.monitor",
@@ -642,11 +1082,11 @@
         "documentation": {}
     },
     {
-        "label": "calculate_enhanced_health_score",
+        "label": "calculate_health_score",
         "kind": 2,
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
-        "peekOfCode": "def calculate_enhanced_health_score(url: str, current_data: dict) -> dict:\n    \"\"\"Calculate enhanced health score with historical context\"\"\"\n    try:\n        # Get historical data\n        historical_data = get_historical_data(url)\n        # Use enhanced health scorer\n        health_data = EnhancedHealthScorer.calculate_health_score(\n            current_data,\n            historical_data\n        )",
+        "peekOfCode": "def calculate_health_score(url: str, current_data: dict) -> dict:\n    \"\"\"Calculate enhanced health score with historical context\"\"\"\n    try:\n        # Get historical data\n        historical_data = get_historical_data(url)\n        # Use enhanced health scorer\n        health_data = EnhancedHealthScorer.calculate_health_score(\n            current_data,\n            historical_data\n        )",
         "detail": "website_monitor.monitor",
         "documentation": {}
     },
@@ -723,11 +1163,29 @@
         "documentation": {}
     },
     {
+        "label": "send_alert_sync",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def send_alert_sync(url: str, alert_type: AlertType, severity: AlertSeverity,\n                    title: str, message: str, details: dict = None):\n    \"\"\"Synchronous wrapper for sending alerts\"\"\"\n    try:\n        # Try to get the current event loop\n        try:\n            loop = asyncio.get_running_loop()\n            # If we're in an async context, schedule the task\n            asyncio.create_task(send_website_alert(\n                url, alert_type, severity, title, message, details))",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "check_and_send_alerts",
+        "kind": 2,
+        "importPath": "website_monitor.monitor",
+        "description": "website_monitor.monitor",
+        "peekOfCode": "def check_and_send_alerts(url: str, previous_status: str = None):\n    \"\"\"Check for alert conditions and send alerts if needed\"\"\"\n    try:\n        current_status = websites[url][\"status\"]\n        health_score = websites[url].get(\"health_score\", {}).get(\"score\", 0)\n        ssl_info = websites[url].get(\"ssl_info\", {})\n        dns_info = websites[url].get(\"dns_info\", {})\n        response_time = websites[url].get(\"response_time\", \"0ms\")\n        # Convert response time to numeric for comparison\n        response_time_ms = float(response_time.replace(",
+        "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
         "label": "check_website",
         "kind": 2,
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
-        "peekOfCode": "def check_website(url):\n    global websites\n    start_time = time.time()\n    # Resolve IP address if not already done\n    if not websites[url].get(\"ip\") or websites[url][\"ip\"] == \"Unknown\":\n        websites[url][\"ip\"] = get_website_ip(url)\n    # Check SSL certificate for HTTPS sites\n    ssl_info = None\n    if url.startswith('https://'):\n        try:",
+        "peekOfCode": "def check_website(url):\n    global websites\n    start_time = time.time()\n    # Store previous status for alert comparison\n    previous_status = websites[url].get(\"status\", \"Unknown\")\n    # Resolve IP address if not already done\n    if not websites[url].get(\"ip\") or websites[url][\"ip\"] == \"Unknown\":\n        websites[url][\"ip\"] = get_website_ip(url)\n    # Check DNS configuration\n    try:",
         "detail": "website_monitor.monitor",
         "documentation": {}
     },
@@ -781,7 +1239,7 @@
         "kind": 5,
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
-        "peekOfCode": "EMAIL_PASSWORD = os.getenv(\"EMAIL_PASSWORD\")\nEMAIL_RECEIVER = os.getenv(\"EMAIL_RECEIVER\")\nERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}",
+        "peekOfCode": "EMAIL_PASSWORD = os.getenv(\"EMAIL_PASSWORD\")\nEMAIL_RECEIVER = os.getenv(\"EMAIL_RECEIVER\")\nERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\n# Load websites from database on startup",
         "detail": "website_monitor.monitor",
         "documentation": {}
     },
@@ -790,7 +1248,7 @@
         "kind": 5,
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
-        "peekOfCode": "EMAIL_RECEIVER = os.getenv(\"EMAIL_RECEIVER\")\nERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\n# Historical data storage for enhanced health scoring",
+        "peekOfCode": "EMAIL_RECEIVER = os.getenv(\"EMAIL_RECEIVER\")\nERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\n# Load websites from database on startup\nwebsites = db.get_all_websites()",
         "detail": "website_monitor.monitor",
         "documentation": {}
     },
@@ -799,7 +1257,7 @@
         "kind": 5,
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
-        "peekOfCode": "ERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\n# Historical data storage for enhanced health scoring\nperformance_history = {}",
+        "peekOfCode": "ERROR_THRESHOLD = 3\nRETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\n# Load websites from database on startup\nwebsites = db.get_all_websites()\ndef sync_websites_to_db():",
         "detail": "website_monitor.monitor",
         "documentation": {}
     },
@@ -808,7 +1266,7 @@
         "kind": 5,
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
-        "peekOfCode": "RETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\n# Historical data storage for enhanced health scoring\nperformance_history = {}\nMAX_HISTORY_ENTRIES = 50  # Keep last 50 measurements per website",
+        "peekOfCode": "RETRY_COUNT = 3\nMETADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\n# Load websites from database on startup\nwebsites = db.get_all_websites()\ndef sync_websites_to_db():\n    \"\"\"Synchronize in-memory websites to database with error handling and batching\"\"\"",
         "detail": "website_monitor.monitor",
         "documentation": {}
     },
@@ -817,7 +1275,7 @@
         "kind": 5,
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
-        "peekOfCode": "METADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\nwebsites = {}\n# Historical data storage for enhanced health scoring\nperformance_history = {}\nMAX_HISTORY_ENTRIES = 50  # Keep last 50 measurements per website\ndef get_historical_data(url: str) -> list:",
+        "peekOfCode": "METADATA_FILE = \"metadata.json\"\n# Logging configuration\nlogging.basicConfig(\n    level=logging.INFO, format=\"%(asctime)s - %(levelname)s - %(message)s\"\n)\n# Load websites from database on startup\nwebsites = db.get_all_websites()\ndef sync_websites_to_db():\n    \"\"\"Synchronize in-memory websites to database with error handling and batching\"\"\"\n    if not websites:",
         "detail": "website_monitor.monitor",
         "documentation": {}
     },
@@ -826,7 +1284,7 @@
         "kind": 5,
         "importPath": "website_monitor.monitor",
         "description": "website_monitor.monitor",
-        "peekOfCode": "websites = {}\n# Historical data storage for enhanced health scoring\nperformance_history = {}\nMAX_HISTORY_ENTRIES = 50  # Keep last 50 measurements per website\ndef get_historical_data(url: str) -> list:\n    \"\"\"Get historical performance data for a website\"\"\"\n    return performance_history.get(url, [])\ndef add_performance_record(url: str, data: dict):\n    \"\"\"Add a performance record to history\"\"\"\n    if url not in performance_history:",
+        "peekOfCode": "websites = db.get_all_websites()\ndef sync_websites_to_db():\n    \"\"\"Synchronize in-memory websites to database with error handling and batching\"\"\"\n    if not websites:\n        return\n    success_count = 0\n    error_count = 0\n    # Batch all updates in a single transaction for better performance\n    try:\n        with db._get_connection() as conn:",
         "detail": "website_monitor.monitor",
         "documentation": {}
     },
@@ -855,6 +1313,123 @@
         "description": "website_monitor.monitor",
         "peekOfCode": "DEFAULT_EXCEL_FILE = \"websites.xlsx\"\nif os.path.exists(DEFAULT_EXCEL_FILE):\n    load_websites_from_excel(DEFAULT_EXCEL_FILE)\nelse:\n    logging.info(\n        \"No default Excel file found, starting with empty website list\")\ndef send_email_alert(website):\n    try:\n        with smtplib.SMTP_SSL(EMAIL_SERVER, EMAIL_PORT) as server:\n            server.login(EMAIL_SENDER, EMAIL_PASSWORD)",
         "detail": "website_monitor.monitor",
+        "documentation": {}
+    },
+    {
+        "label": "AlertSeverity",
+        "kind": 6,
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "peekOfCode": "class AlertSeverity(Enum):\n    \"\"\"Alert severity levels\"\"\"\n    LOW = \"LOW\"\n    MEDIUM = \"MEDIUM\"\n    HIGH = \"HIGH\"\n    CRITICAL = \"CRITICAL\"\nclass AlertType(Enum):\n    \"\"\"Types of alerts\"\"\"\n    WEBSITE_DOWN = \"WEBSITE_DOWN\"\n    WEBSITE_UP = \"WEBSITE_UP\"",
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "AlertType",
+        "kind": 6,
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "peekOfCode": "class AlertType(Enum):\n    \"\"\"Types of alerts\"\"\"\n    WEBSITE_DOWN = \"WEBSITE_DOWN\"\n    WEBSITE_UP = \"WEBSITE_UP\"\n    SLOW_RESPONSE = \"SLOW_RESPONSE\"\n    SSL_EXPIRING = \"SSL_EXPIRING\"\n    DNS_ISSUE = \"DNS_ISSUE\"\n    HEALTH_SCORE_LOW = \"HEALTH_SCORE_LOW\"\n    ERROR_THRESHOLD = \"ERROR_THRESHOLD\"\n@dataclass",
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "AlertMessage",
+        "kind": 6,
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "peekOfCode": "class AlertMessage:\n    \"\"\"Alert message structure\"\"\"\n    title: str\n    message: str\n    severity: AlertSeverity\n    alert_type: AlertType\n    website_url: str\n    timestamp: datetime\n    details: Dict[str, Any] = None\n    def to_dict(self) -> Dict:",
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "AlertChannel",
+        "kind": 6,
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "peekOfCode": "class AlertChannel:\n    \"\"\"Base class for alert channels\"\"\"\n    def __init__(self, name: str, enabled: bool = True):\n        self.name = name\n        self.enabled = enabled\n    async def send_alert(self, alert: AlertMessage) -> bool:\n        \"\"\"Send alert through this channel\"\"\"\n        raise NotImplementedError\n    def format_message(self, alert: AlertMessage) -> str:\n        \"\"\"Format message for this channel\"\"\"",
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "SlackChannel",
+        "kind": 6,
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "peekOfCode": "class SlackChannel(AlertChannel):\n    \"\"\"Slack webhook alerting\"\"\"\n    def __init__(self, webhook_url: str, channel: str = None, username: str = \"SiteSentinel\"):\n        super().__init__(\"Slack\")\n        self.webhook_url = webhook_url\n        self.channel = channel\n        self.username = username\n    async def send_alert(self, alert: AlertMessage) -> bool:\n        \"\"\"Send alert to Slack\"\"\"\n        try:",
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "DiscordChannel",
+        "kind": 6,
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "peekOfCode": "class DiscordChannel(AlertChannel):\n    \"\"\"Discord webhook alerting\"\"\"\n    def __init__(self, webhook_url: str, username: str = \"SiteSentinel\"):\n        super().__init__(\"Discord\")\n        self.webhook_url = webhook_url\n        self.username = username\n    async def send_alert(self, alert: AlertMessage) -> bool:\n        \"\"\"Send alert to Discord\"\"\"\n        try:\n            # Severity color mapping (Discord colors are decimal)",
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "EmailChannel",
+        "kind": 6,
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "peekOfCode": "class EmailChannel(AlertChannel):\n    \"\"\"Email alerting via SMTP\"\"\"\n    def __init__(self, smtp_server: str, smtp_port: int, username: str,\n                 password: str, sender_email: str, recipient_emails: List[str],\n                 use_tls: bool = True):\n        super().__init__(\"Email\")\n        self.smtp_server = smtp_server\n        self.smtp_port = smtp_port\n        self.username = username\n        self.password = password",
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "SMSChannel",
+        "kind": 6,
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "peekOfCode": "class SMSChannel(AlertChannel):\n    \"\"\"SMS alerting via Twilio\"\"\"\n    def __init__(self, account_sid: str, auth_token: str, from_number: str,\n                 to_numbers: List[str]):\n        super().__init__(\"SMS\")\n        self.account_sid = account_sid\n        self.auth_token = auth_token\n        self.from_number = from_number\n        self.to_numbers = to_numbers\n    async def send_alert(self, alert: AlertMessage) -> bool:",
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "TeamsChannel",
+        "kind": 6,
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "peekOfCode": "class TeamsChannel(AlertChannel):\n    \"\"\"Microsoft Teams webhook alerting\"\"\"\n    def __init__(self, webhook_url: str):\n        super().__init__(\"Teams\")\n        self.webhook_url = webhook_url\n    async def send_alert(self, alert: AlertMessage) -> bool:\n        \"\"\"Send alert to Microsoft Teams\"\"\"\n        try:\n            # Create Teams message card\n            card = {",
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "TelegramChannel",
+        "kind": 6,
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "peekOfCode": "class TelegramChannel(AlertChannel):\n    \"\"\"Telegram bot alerting\"\"\"\n    def __init__(self, bot_token: str, chat_ids: List[str]):\n        super().__init__(\"Telegram\")\n        self.bot_token = bot_token\n        self.chat_ids = chat_ids\n    async def send_alert(self, alert: AlertMessage) -> bool:\n        \"\"\"Send alert to Telegram\"\"\"\n        try:\n            # Create formatted message with emoji",
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "AlertManager",
+        "kind": 6,
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "peekOfCode": "class AlertManager:\n    \"\"\"Main alert management system\"\"\"\n    def __init__(self):\n        self.channels: List[AlertChannel] = []\n        self.alert_history: List[AlertMessage] = []\n        self.max_history = 1000\n        # Load configuration from environment variables\n        self._load_configuration()\n    def _load_configuration(self):\n        \"\"\"Load alert channel configuration from environment variables\"\"\"",
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "peekOfCode": "logger = logging.getLogger(__name__)\nclass AlertSeverity(Enum):\n    \"\"\"Alert severity levels\"\"\"\n    LOW = \"LOW\"\n    MEDIUM = \"MEDIUM\"\n    HIGH = \"HIGH\"\n    CRITICAL = \"CRITICAL\"\nclass AlertType(Enum):\n    \"\"\"Types of alerts\"\"\"\n    WEBSITE_DOWN = \"WEBSITE_DOWN\"",
+        "detail": "alert_system",
+        "documentation": {}
+    },
+    {
+        "label": "alert_manager",
+        "kind": 5,
+        "importPath": "alert_system",
+        "description": "alert_system",
+        "peekOfCode": "alert_manager = AlertManager()",
+        "detail": "alert_system",
         "documentation": {}
     },
     {
@@ -975,6 +1550,33 @@
         "documentation": {}
     },
     {
+        "label": "alerts_management",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def alerts_management():\n    \"\"\"Alert management page\"\"\"\n    try:\n        return render_template(\"alerts.html\")\n    except Exception as e:\n        logger.error(f\"Error in alerts route: {e}\")\n        return f\"An error occurred: {e}\", 500\n@app.route(\"/settings\")\ndef settings_page():\n    \"\"\"Settings page\"\"\"",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "settings_page",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def settings_page():\n    \"\"\"Settings page\"\"\"\n    try:\n        # Get all current settings from database\n        settings = db.get_all_settings()\n        # Set default values if not in database\n        default_settings = {\n            'check_interval': '3600',\n            'request_timeout': '30',\n            'retry_attempts': '3',",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
+        "label": "update_settings",
+        "kind": 2,
+        "importPath": "app",
+        "description": "app",
+        "peekOfCode": "def update_settings():\n    \"\"\"Update system settings\"\"\"\n    try:\n        # Get form data\n        form_data = request.form.to_dict()\n        # Handle checkboxes (they don't appear in form data if unchecked)\n        checkbox_fields = ['auto_cleanup',\n                           'enable_screenshots', 'enable_email_notifications']\n        for field in checkbox_fields:\n            if field not in form_data:",
+        "detail": "app",
+        "documentation": {}
+    },
+    {
         "label": "not_found",
         "kind": 2,
         "importPath": "app",
@@ -997,7 +1599,7 @@
         "kind": 5,
         "importPath": "app",
         "description": "app",
-        "peekOfCode": "app = Flask(__name__)\napp.secret_key = config.SECRET_KEY\n# Configure logging\nlog_level = getattr(logging, config.LOG_LEVEL.upper(), logging.INFO)\nlogging.basicConfig(\n    level=log_level,\n    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',\n    handlers=[\n        logging.StreamHandler(),\n        *([logging.FileHandler(config.LOG_FILE)] if config.LOG_FILE else [])",
+        "peekOfCode": "app = Flask(__name__)\napp.secret_key = config.SECRET_KEY\n# Register API blueprint\napp.register_blueprint(api_bp)\n# Configure logging\nlog_level = getattr(logging, config.LOG_LEVEL.upper(), logging.INFO)\nlogging.basicConfig(\n    level=log_level,\n    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',\n    handlers=[",
         "detail": "app",
         "documentation": {}
     },
@@ -1006,7 +1608,7 @@
         "kind": 5,
         "importPath": "app",
         "description": "app",
-        "peekOfCode": "app.secret_key = config.SECRET_KEY\n# Configure logging\nlog_level = getattr(logging, config.LOG_LEVEL.upper(), logging.INFO)\nlogging.basicConfig(\n    level=log_level,\n    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',\n    handlers=[\n        logging.StreamHandler(),\n        *([logging.FileHandler(config.LOG_FILE)] if config.LOG_FILE else [])\n    ]",
+        "peekOfCode": "app.secret_key = config.SECRET_KEY\n# Register API blueprint\napp.register_blueprint(api_bp)\n# Configure logging\nlog_level = getattr(logging, config.LOG_LEVEL.upper(), logging.INFO)\nlogging.basicConfig(\n    level=log_level,\n    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',\n    handlers=[\n        logging.StreamHandler(),",
         "detail": "app",
         "documentation": {}
     },
@@ -1069,7 +1671,25 @@
         "kind": 6,
         "importPath": "database",
         "description": "database",
-        "peekOfCode": "class SiteSentinelDB:\n    def __init__(self, db_path: str = 'sitesentinel.db'):\n        self.db_path = db_path\n        self.lock = threading.Lock()\n        self.init_database()\n    def init_database(self):\n        \"\"\"Initialize database tables\"\"\"\n        with sqlite3.connect(self.db_path) as conn:\n            cursor = conn.cursor()\n            # Websites table",
+        "peekOfCode": "class SiteSentinelDB:\n    def __init__(self, db_path: str = 'sitesentinel.db'):\n        self.db_path = db_path\n        self.lock = threading.Lock()\n        self.init_database()\n    def _get_connection(self):\n        \"\"\"Get a database connection with proper configuration\"\"\"\n        conn = sqlite3.connect(\n            self.db_path, timeout=120.0, check_same_thread=False)\n        # Set optimizations for concurrent access",
+        "detail": "database",
+        "documentation": {}
+    },
+    {
+        "label": "retry_database_operation",
+        "kind": 2,
+        "importPath": "database",
+        "description": "database",
+        "peekOfCode": "def retry_database_operation(max_retries=3, base_delay=0.1):\n    \"\"\"Decorator to retry database operations with exponential backoff\"\"\"\n    def decorator(func):\n        def wrapper(*args, **kwargs):\n            for attempt in range(max_retries):\n                try:\n                    return func(*args, **kwargs)\n                except sqlite3.OperationalError as e:\n                    if \"database is locked\" in str(e).lower() and attempt < max_retries - 1:\n                        delay = base_delay * (2 ** attempt)",
+        "detail": "database",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "database",
+        "description": "database",
+        "peekOfCode": "logger = logging.getLogger(__name__)\ndef retry_database_operation(max_retries=3, base_delay=0.1):\n    \"\"\"Decorator to retry database operations with exponential backoff\"\"\"\n    def decorator(func):\n        def wrapper(*args, **kwargs):\n            for attempt in range(max_retries):\n                try:\n                    return func(*args, **kwargs)\n                except sqlite3.OperationalError as e:\n                    if \"database is locked\" in str(e).lower() and attempt < max_retries - 1:",
         "detail": "database",
         "documentation": {}
     },
@@ -1089,6 +1709,33 @@
         "description": "debug_health_scoring",
         "peekOfCode": "def test_individual_components():\n    \"\"\"Test each component individually\"\"\"\n    scorer = EnhancedHealthScorer()\n    # Perfect test data\n    perfect_data = {\n        'url': 'https://example.com',\n        'status': 'UP',\n        'status_code': 200,\n        'response_time': '150ms',\n        'error_count': 0,",
         "detail": "debug_health_scoring",
+        "documentation": {}
+    },
+    {
+        "label": "DNSMonitor",
+        "kind": 6,
+        "importPath": "dns_monitor",
+        "description": "dns_monitor",
+        "peekOfCode": "class DNSMonitor:\n    \"\"\"Advanced DNS monitoring with record checking, change detection, and security analysis\"\"\"\n    def __init__(self):\n        # DNS record types to monitor\n        self.record_types = ['A', 'AAAA', 'MX', 'CNAME', 'TXT', 'NS', 'SOA']\n        # DNS resolvers for redundancy\n        self.resolvers = [\n            '8.8.8.8',      # Google\n            '1.1.1.1',      # Cloudflare\n            '208.67.222.222',  # OpenDNS",
+        "detail": "dns_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "dns_monitor",
+        "description": "dns_monitor",
+        "peekOfCode": "logger = logging.getLogger(__name__)\nclass DNSMonitor:\n    \"\"\"Advanced DNS monitoring with record checking, change detection, and security analysis\"\"\"\n    def __init__(self):\n        # DNS record types to monitor\n        self.record_types = ['A', 'AAAA', 'MX', 'CNAME', 'TXT', 'NS', 'SOA']\n        # DNS resolvers for redundancy\n        self.resolvers = [\n            '8.8.8.8',      # Google\n            '1.1.1.1',      # Cloudflare",
+        "detail": "dns_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "dns_monitor",
+        "kind": 5,
+        "importPath": "dns_monitor",
+        "description": "dns_monitor",
+        "peekOfCode": "dns_monitor = DNSMonitor()",
+        "detail": "dns_monitor",
         "documentation": {}
     },
     {
@@ -1134,6 +1781,15 @@
         "description": "ssl_monitor",
         "peekOfCode": "logger = logging.getLogger(__name__)\nclass SSLMonitor:\n    \"\"\"SSL Certificate monitoring and analysis\"\"\"\n    @staticmethod\n    def check_ssl_certificate(url: str) -> Dict:\n        \"\"\"\n        Check SSL certificate for a given URL\n        Args:\n            url (str): Website URL to check SSL certificate\n        Returns:",
         "detail": "ssl_monitor",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "test_alerts",
+        "description": "test_alerts",
+        "peekOfCode": "def main():\n    \"\"\"Main function\"\"\"\n    print(\"SiteSentinel Alert System Test\")\n    print(\"===============================\\n\")\n    # Check if environment variables are set\n    env_vars = [\n        'SLACK_WEBHOOK_URL',\n        'DISCORD_WEBHOOK_URL',\n        'SMTP_SERVER',\n        'TWILIO_ACCOUNT_SID',",
+        "detail": "test_alerts",
         "documentation": {}
     }
 ]
